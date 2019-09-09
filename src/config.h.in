@@ -1,0 +1,11 @@
+/**
+ * Copyright 2019 BidFX Systems Ltd. All rights reserved.
+ */
+
+#ifndef BIDFX_PUBLIC_API_CPP_CONFIG_H_IN
+#define BIDFX_PUBLIC_API_CPP_CONFIG_H_IN
+
+#define API_NAME "${PROJECT_NAME}"
+#define API_VERSION "${PROJECT_VERSION}"
+
+#endif //BIDFX_PUBLIC_API_CPP_CONFIG_H_IN
