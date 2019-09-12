@@ -268,7 +268,6 @@ add_executable(runTests
         test/Price/Provider/Pixie/Fields/extended_data_dictionary_test.cpp
         test/price/provider/pixie/messages/control_operation_test.cpp
         test/price/provider/pixie/messages/data_dictionary_message_test.cpp
-        test/Tools/mock_ssl_client.h
         test/Price/Subject/subject_builder_test.cpp
         test/Tools/date_test.cpp test/Price/Subject/subject_factory_test.cpp
         test/Price/currencies_test.cpp
