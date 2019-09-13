@@ -14,7 +14,7 @@
  */
 
 #include <list>
-#include "src/price/provider/pixie/Fields/field_def.h"
+#include "src/price/provider/pixie/fields/field_def.h"
 #include "src/price/provider/pixie/messages/pixie_message.h"
 #include "src/price/provider/pixie/messages/pixie_message_type.h"
 #include "src/price/provider/pixie/messages/data_dictionary_message.h"

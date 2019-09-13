@@ -15,7 +15,7 @@
 
 #include <sstream>
 #include "src/tools/string_char_iterator.h"
-#include "src/Price/Subject/subject_formatter.h"
+#include "src/price/subject/subject_formatter.h"
 
 namespace bidfx_public_api::price::subject
 {

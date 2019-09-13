@@ -14,10 +14,10 @@
  */
 
 #include <stdexcept>
-#include "src/price/provider/pixie/Fields/field_def.h"
-#include "src/price/provider/pixie/Fields/field_encoding.h"
-#include "src/price/provider/pixie/Fields/extendable_data_dictionary.h"
-#include "src/price/provider/pixie/Fields/data_dictionary_utils.h"
+#include "src/price/provider/pixie/fields/field_def.h"
+#include "src/price/provider/pixie/fields/field_encoding.h"
+#include "src/price/provider/pixie/fields/extendable_data_dictionary.h"
+#include "src/price/provider/pixie/fields/data_dictionary_utils.h"
 #include "gtest/gtest.h"
 
 namespace bidfx_public_api::price::pixie

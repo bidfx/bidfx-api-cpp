@@ -14,7 +14,7 @@
  */
 
 #include "gtest/gtest.h"
-#include "src/price/provider/pixie/Fields/field_encoding.h"
+#include "src/price/provider/pixie/fields/field_encoding.h"
 
 namespace
 {
