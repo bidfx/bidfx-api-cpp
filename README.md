@@ -87,8 +87,8 @@ session_->SetHost("ny-tunnel.uatdev.tradingscreen.com")
 	    .SetUsername("demo_username")
 	    .SetPassword("password123")
 	    .SetDefaultAccount("FX_ACCT")
-	    .SetApi("Example API")
-	    .SetApiVersion("1.0")
+	    .SetApplication("Example API")
+	    .SetApplicationVersion("1.0")
 	    .SetProductSerialNumber("TEST_PRODUCT_0012345");
 ```
 
