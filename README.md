@@ -1,79 +1,130 @@
-# BidFX C++ API Usage
+![BidFX logo](bidfx_logo_128.png)
+
+# Public API for C++
 
 ## About BidFX
 
-BidFX is the market leading provider of electronic trading solutions for
-the global FX marketplace. BidFX has addressed the challenges of the FX
-market head on by introducing a complete suite of negotiation protocols
-which include: auto-routing, streaming, request-for-quote, voice and
-algo-trading via a cloud-based trading platform incorporating
-best-execution. Clients have access to a cutting edge, broker neutral,
+BidFX is the market-leading provider of electronic trading solutions for the global foreign exchange marketplace. BidFX has addressed the challenges of
+the FX market by introducing a complete suite of negotiation protocols
+– which include: auto-routing, streaming, request-for-quote, voice,
+algo-trading and best execution – via a cloud-based SaaS trading platform.
+BidFX offer clients access to a cutting edge, broker-neutral,
 Execution Management System (EMS) backed by a hub to all major bank's
-algo suites. Read about all of our products at
-[http://www.bidfx.com.](http://www.bidfx.com.)
+algo suites. You can read about all BidFX products on the
+[BidFX Website](https://www.bidfx.com).
 
-## Introduction
 
-This document describes the usage of the BidFX product offering for C++.
-Liquidity Providers (LPs) publish their price quotes into the BidFX
-platform using the FIX protocol. The platform ingress flow involves
-billions for FIX messages per day. BidFX provision for this purpose
-high-bandwidth, cross-connect circuits in the key FX data centres:
-London (LD4), New York (NY4) and Tokyo (TY3). The BidFX C++ API makes
-use of highly optimised, bespoke binary protocols to deliver realtime
-quotes from your LPs directly to you in a workable format. The BidFX
-delivery mechanism is approximately 80 times more efficient than the FIX
-protocol and we publish to you only those quotes that are requested via
-a publish and subscribe paradigm.
+## BidFX APIs
 
-## Programming Language
+BidFX clients generally access the trading platform via a dedicated User Interface (UI) either on their desktop PC, web browser or mobile
+device.
+APIs provide a secondary means of accessing the trading platform that can either supplement
+the UI or replace it entirely for some use cases, including systematic trading, OMS integration and market intelligence.
+BidFX place significant emphasis on API support and therefore
+provide a suite of APIs for different high-level programming languages
+and data exchange protocols.
 
-The C++ API is written purely in C++17. All of the coded examples below
+You can read about the complete BidFX API range, and their different capabilities,
+at [BidFX API Overview](https://www.bidfx.com/apis).
+
+
+## C++ API
+
+This document describes the BidFX Public API for C++.
+The C++ API is written purely in C++17. All of the code examples below
 are also presented in C++.
 
-The API makes use of a publish-subscribe paradigm in which clients
-register for price updates by subscribing on subjects. Subjects identify
-individual products. Liquidity providers publish streams of real-time
-prices against large numbers of subjects. The BidFX price service
-matches client's subscription subjects against published subjects and
-forwards on to each client only those price updates that match their
-subscriptions.
+We use the tag *Public* to indicated that, unlike our many private APIs,
+this API is designed and maintained for public use by BidFX clients.
+The implies a degree of support, API stability and futute compatibility appropriate to client usage.
 
-The namespace BidFX.Public.API.Price contains all of the classes,
-methods and events that are necessary to subscribe to pricing from a
-number of pricing services:
+### API Features
 
- - Create a connection to our externally accessible pricing service.
- - Subscribe to instruments for multiple price providers.
- - Receive status and/or real-time price updates on each subscription.
- - Unsubscribe from price updates.
+The C++ API is predominantly a realtime price API. It supports the following features:
 
-## OS Specific Notes
+ - FX streaming executable prices (RFS)
+ - FX request for quote (RFQ)
+ - FX and Futures trading from C++ is available via the REST.
 
+Most users of the API will trade against the subscribed prices.
+This is achieved by making RESTful requests to post orders via the BidFX REST API.
+The REST API is easily accessed using C++.
 
-In order to use this library you will need to install ZLib.
+### Realtime Price feeds
 
-**Ubuntu:** Install zlib1g-dev by running
+Liquidity Providers (LPs) mostly publish tradable price/quotes into the BidFX
+platform using the FIX protocol. The quotes from LPs are firm prices
+with an associated price ID that needs to be attached to any order made against the quote.
+The BidFX platform consumes billions for FIX messages per day. We provision
+high-bandwidth, cross-connect circuits in the main global data centres for this purpose.
+BidFX cross-connect where most banks host their price engines, in particular in:
+
+ - London (LD4),
+ - New York (NY4) and
+ - Tokyo (TY3).
+
+FX quotes are short-lived and LPs reserve the right of **last look**.
+A quote usually is good for no more than a few hundred milliseconds.
+Network latency between the client application and the LP is therefore
+a significant consideration if we want to avoid rejections.
+If clients intend to trade directly against price IDs, then it is recommended
+that they run their application very close to the source of liquidity
+and cross-connect within the same data centre if possible.
+Alternatively, clients may route their orders to the BidFX Strategy Server to minimise both rejections and slippage.
+
+The BidFX C++ API implements a highly optimised, bespoke binary protocol to deliver realtime quotes from LPs directly to into a client's application with minimal latency.
+The binary delivery mechanism is approximately 80 times more efficient than the FIX protocol.
+Furthermore, using the publish and subscribe paradigm, BidFX
+publish only those quotes that subscribed to.
+
+## API Set Up
+
+### OS Specific Set Up
+
+To use the API, you will need to install the `ZLib` data compression library.
+
+ - **Ubuntu:** Install `zlib1g-dev` by running
 `sudo apt-get install zlib1g-dev` in a terminal.
 
-**Mac OS X:**  Install xcode command line tools by running
+ - **Mac OS X:**  Install the Apple *xcode* command line tools by running
 `xcode-select --install` in a terminal.
 
-**Windows (cygwin):** Install the zlib-devel package.
+ - **Windows (cygwin):** Install the `zlib-devel` package.
 
 
-## Configuring your IDE (CLion)
+### Configuring your IDE
+
+For C++ development we recommend an integrated development environment (IDE)
+designed for programming in C++.
+We use the **CLion** IDE from JetBrains. You can configure CLion as follows.
 
 - File -> Settings -> Build, Execution, Deployment -> Toolchains
-	- Configure the environment to target your cygwin install
-	`C:\cygwin64`.
+    - Configure the environment to target your cygwin install
+    `C:\cygwin64`.
 - File -> Settings -> Build, Execution, Deployment -> CMake
-	- Configure the debug profile.
-		- Set the following CMake options `-DCMAKE_BUILD_TYPE=Debug
-		-Dtest=TRUE -Dgtest_disable_pthreads=ON`
+    - Configure the debug profile.
+        - Set the following CMake options `-DCMAKE_BUILD_TYPE=Debug -Dtest=TRUE -Dgtest_disable_pthreads=ON`
 
 
-## Guides on Usage
+## API Usage
+
+The Price API makes use of a publish-subscribe paradigm in which clients
+register for price updates by subscribing on subjects. Subjects identify
+individual products or instruments for which realtime pricing may be obtained.
+Liquidity providers publish streams of realtime
+prices against large numbers of subjects. The BidFX price service
+matches the client's subscribed subjects against the total universe of
+published subjects and forwards on to each client only those price updates
+that match their subscriptions.
+
+The namespace `BidFX.Public.API.Price` contains all of the classes,
+methods and event handlers that are necessary to subscribe to pricing from
+several pricing services. The common usage patten for the API involves:
+
+ - Creating a connection to BidFX's externally accessible pricing service.
+ - Subscribe to subjects representing instruments from multiple price providers.
+ - Receive status and realtime price updates on each subscription.
+ - Unsubscribe from price subjects to stop receiving updates.
 
 ### Creating a Session
 
@@ -84,51 +135,42 @@ etc.
 ```cpp
 std::unique_ptr<Session> session_ = PublicApi::CreateSession();
 session_->SetHost("ny-tunnel.uatdev.tradingscreen.com")
-	    .SetUsername("demo_username")
-	    .SetPassword("password123")
-	    .SetDefaultAccount("FX_ACCT")
-	    .SetApi("Example API")
-	    .SetApiVersion("1.0")
-	    .SetProductSerialNumber("TEST_PRODUCT_0012345");
+        .SetUsername("acme_api")
+        .SetPassword("secret_password!")
+        .SetDefaultAccount("FX_ACCT")
+        .SetApplication("ACME OMS")
+        .SetApplicationVersion("2.1")
+        .SetProductSerialNumber("f2d332674ddfe0b02833979c");
 ```
 
 It doesn't matter what order you configure your details, but do ensure
-you set all those fields listed as required in the following table:
+you set all those fields listed in the following table:
 
-| Name 			| Description   |     Type      | Default Value |
-| ------------- | ------------- | ------------- | ------------- |
-| Host  | 	The host name of the BidFX point-of-presence (see below) you want to connect to.  | std::string  | -  |
-| Username  | The username to authenticate with. This will have to be a valid user for the environment / host.  | std::string  | -  |
-| Password  | The password of the selected user.  | std::string  | -  |
-| DefaultAccount  | 	The default buy side account use for booking FX orders.  | std::string  | -  |
-| Application  | 	The name of the application being used to connect to the server. Used for client administration.  | std::string  | -  |
-| ApplicationVersion  | The version number of the application. Used for client administration  | std::string  | -  |
-| ProductSerialNumber  | The serial number assigned by BidFX for the product. Used for product licensing purposes.  | std::string | -  |
+| Name                 | Description   |     Type      |
+| -------------        | ------------- | ------------- |
+| Host                 | The hostname of the BidFX [POP](POP.md). The host determines the environment. | std::string  |
+| Username             | The username to authenticate with. Must be a valid API user for the environment. | std::string  |
+| Password             | The password of the selected user. | std::string  |
+| DefaultAccount       | The default buy-side account use for booking FX orders. Prices can vary by account. | std::string  |
+| Application          | The name of the client application connecting to the server. Used for client administration/monitoring.  | std::string  |
+| ApplicationVersion   | The version number of the client application. Used for client administration/monitoring. | std::string  |
+| ProductSerialNumber  | The serial number assigned by BidFX for the product. Used for product licensing purposes. | std::string |
 
 
-### Pricing
+### Using the Pricing Interface
 
-#### Get the Price Manager
-
-Once you have created your `Session` with the correct properties you can
-create a price manager which you can use to setup callbacks.
+From the main `Session` you can access the `Pricing` interface that is used to register for callbacks.
 
 ```cpp
 std::unique_ptr<Pricing> pricing_ = std::unique_ptr<Pricing>(&session_->pricing());
 ```
 
-This will initiate the connection to the price services and await
-subscriptions from you. If you encounter an error at this point then
-this is most
-likely a result of a mis-configuration of one of more of the above
-properties.
+The above call will initiate the connection to the price services and await subscription requests.
+Any error at this point is most likely a result of a misconfiguration of one or more of the above properties.
 
-#### Registering for Price Updates from Subscriptions
+#### Price Updates Callbacks
 
-Real-time price updates are forwarded to the client application via C++
-function pointers. To register for price updates, you create a callback
-method (event delegate) to handle the published events. The method
-signature should be as follows:
+The server forwards realtime price updates to the client application via C++ function pointers. To register for price updates, you create a callback method to handle published price events. The method signature should be as follows:
 
 ```cpp
 void OnPriceUpdate(PriceUpdateEvent& event);
@@ -139,7 +181,7 @@ pointer to that function and passing that function pointer as an
 argument to the pricing manager. For example:
 
 ```cpp
-// Define an event delegate for handling price update events.
+// Define an callback function for handling price update events.
 void ApiExample::OnPriceUpdate(PriceUpdateEvent& event)
 {
     std::cout << "Price Callback Triggered" << std::endl;
@@ -153,25 +195,23 @@ std::function<void(PriceUpdateEvent&)> price_update_callback =
 pricing_->SetPriceUpdateEventCallback(price_update_callback)
 ```
 
-#### Registering for Status Updates from Subscriptions
+#### Subscription Status Callback
 
 If the price service cannot provide a price for a subject for some
 reason, it will publish a subscription status event against the problem
 subject.
-Again the standard C++ function pointer is employed to manage these
-events. To register for status updates, you create a callback method
-(event delegate) to handle the event. The method signature should be as
-follows:
+A callback in the form of a C++ function pointer should be provided to handle these
+events. The method signature should be as follows:
 
 ```cpp
 void OnSubscriptionStatus(SubscriptionStatusEvent& event);
 ```
 
-We recommend that all applications register for subscription status
+We recommend that all applications register for and handle subscription status
 events. For example:
 
 ```cpp
-// Define an event delegate for handling status updates.
+// Define an callback function for handling status updates.
 void ApiExample::OnSubscriptionStatus(SubscriptionStatusEvent& event)
 {
     std::cout << "Subscription Callback Triggered" << std::endl;
@@ -186,15 +226,16 @@ std::function<void(SubscriptionStatusEvent&)> subscription_callback =
 pricing_->SetSubscriptionStatusEventCallback(subscription_callback)
 ```
 
-#### Registering for Status Updates from the Price Provider
+#### Provider Status Callback
 
+The price API can support multiple price providers (price servers).
 The provider of pricing can encounter state changes, such as if the
-internet were to go down. These events will trigger a
+connection were to go down. These events will trigger a
 SubscriptionStatusEvent
-which can be received from a callback you can register.
+which can be received from a registered callback.
 
 ```cpp
-// Define an event delegate for handling status updates.
+// Define an callback function for handling status updates.
 void ApiExample::OnProviderStatus(ProviderStatusEvent& event)
 {
     std::cout << "Provider Status Update: << event.Describe();
@@ -209,10 +250,10 @@ std::function<void(SubscriptionStatusEvent&)> subscription_callback =
 pricing_->SetSubscriptionStatusEventCallback(subscription_callback)
 ```
 
-#### Check if the Pricing Connections are Ready
+#### Check Pricing Is Ready
 
-To check if the session is ready for use, use the Ready property of
-`Pricing`.
+To check if the session is ready for use, use the **Ready** property of the
+`Pricing` interface.
 
 ```cpp
 if (pricing_.IsReady())
@@ -225,17 +266,16 @@ else
 }
 ```
 
-#### Wait for the Pricing Connections to be Ready
+#### Wait For Pricing To Be Ready
 
-It is not necessary to wait until the pricing connections are ready
-before making subscriptions but some applications need this capability.
-Should
-you wish to wait until the pricing connections are ready, then you can
+It is not always necessary to wait until the pricing connections are ready
+before making subscriptions, but may applications need this capability.
+Should you wish to wait until the pricing connections are ready, then you can
 call the method `WaitForSubscriber` on the price session. This method
 takes
 a `std::chrono::milliseconds` as a timeout interval. If the pricing
-connection do not become ready within the given time interval it throws
-a `TimeoutException`. In the case of failure you might then take the
+connection does not become ready within the given time interval, it throws
+a `TimeoutException`. In the case of failure, you might then take the
 opportunity to output the status of each connection - accessible via
 `ProviderProperties` - to find out why that connection failed to ready
 itself.
@@ -322,19 +362,19 @@ Subject new_subject2 = subscriber_->subjects().fx().stream().forward()
 
 ##### Valid Tenors
 
-`TOD, TOM, SPOT, SPOT_NEXT`
+The following tenors may be used:
 
-`1W, 2W, 3W`
+ - Near date tenors: `TOD, TOM, SPOT, SPOT_NEXT`
+ - Weekly tenors: `1W, 2W, 3W`
+ - Monthly tenors: `1M, 2M … 11M`
+ - Yearly tenors: `1Y, 2Y, 3Y`
+ - IMM future tenors: `IMMH, IMMM, IMMU, IMMZ`
+ - Broken date tenors: `BD` (an explicity settlement date is required).
 
-`1M … 11M`
-
-`1Y, 2Y, 3Y`
-
-`IMMH, IMMM, IMMU, IMMZ, BD`
 
 #### Subscribing and Unsubscribing
 
-To subscribe or unsubscribe from prices you can call the `Subscribe` and
+To manage price subscriptions call the `Subscribe` and
 `Unsubscribe` methods of the price subscriber. These both accept a
 `BidFX.Public.API.Subject.Subject` to operate on.
 
@@ -353,22 +393,19 @@ subscriber_->Subscribe(subject1);
 subscriber_->Unsubscribe(subject1);
 ```
 
-Subscriptions are made asynchronously in the background. The `Subscribe`
-method will provide no immediate feedback on the success of
-otherwise of its action. The client will however quickly receive
-feedback on the subscription via one of the event delegate callback
-methods. If there is a problem then you will receive a
-`SubscriptionStatus` event. If a price was obtained then you will
-receive a `PriceUpdate` event. Price updates have an implied status
+Subscriptions are made asynchronously in the background. The `Subscribe` method will provide no immediate feedback on the success or otherwise of its action. The client will, however, quickly receive
+feedback on the subscription via one of the event callback
+methods. If there is a problem, then you will receive a
+`SubscriptionStatus` event. You will
+receive a `PriceUpdate` event each time a price is received. Price updates have an implied status
 of `SubscriptionStatus.OK`. Note that it is not uncommon for some price
 feeds to initially publish `SubscriptionStatus.PENDING`, to notify the
 receipt of a subscription, soon followed by a price update once the data
-becomes available from its own remote feed.
+becomes available from its remote feed.
 
 `Subscribe` has an optional argument, `auto_refresh`. Setting this to
-true will cause the subscription to automatically resubscribe if the
-subscription is closed without `Unsubscribe` being called on the
-subject, such as a Quote subscription expiring.
+`true` will trigger a subscription refresh whenever the
+subscription is terminated prematurely without calling `Unsubscribe`  on the subject (such as a discontinued RFQ).
 
 #### Price Update Events
 
@@ -381,7 +418,7 @@ containing all current price fields for the instrument.
 - An `std::map<std::string, PriceField>` called `ChangedPriceFields`
 containing only those fields which changed in this most recent update.
 
-The `ChangedPriceFields` are always a subset of `AllPriceFields` and in
+The `ChangedPriceFields` are always a subset of `AllPriceFields`, and in
 some cases, such as the initial snapshot, they are identical. Often GUI
 applications make use of the `ChangedPriceFields` to flash the fields
 that have just updated.
@@ -395,14 +432,14 @@ enumerate over all of the name-value pairs. You can also directly access
 individual fields by their name. Field names are just strings with short
 camel-case word list. All of the likely published field names are defined
 as string constants in the class called
-`BidFX.Public.API.Price.FieldName`. To avoid simple typing errors you
+`BidFX.Public.API.Price.FieldName`. To avoid simple typing errors, you
 should use these constants for accessing specific fields from the map.
 For example:
 
 ```cpp
 using bidfx_public_api::price::FieldName;
 
-// Your event delegate for price updates
+// Your callback function for price updates
 void ApiExample::OnPriceUpdate(PriceUpdateEvent& event)
 {
     // You can get either AllPriceFields or ChangedPriceFields
@@ -454,24 +491,23 @@ void ApiExample::OnPriceUpdate(PriceUpdateEvent& event)
 
 ##### Field Names
 
-The table below defines some of the more common field names that can be
-returned from a subscription. These are defined as string constants in
+The table below defines some of the more common price field names - defined as string constants in
 the class called `BidFX.Public.API.Price.FieldName` for convenience.
 
-| Field Name | Stream & Quote |
-| ----------- | ------------- | 
-|       Bid      |       yes        |
-|       Ask      |         yes      |
-|       BidTime      |         yes      |
-|       AskTime      |         yes      | 
-|       OriginTime      |       yes        | 
-|       PriceID      |         yes      | 
-|       BidSpot      |          yes     |
-|       AskSpot      |         yes      | 
-|       BidForwardPoints      |  yes             |
-|       BidForwardPoints      |     yes          | 
-|       AskForwardPoints      |        yes       |
-|       SystemTime      |       yes        |
+| Field Name  | Stream & Quote |
+| ----------- | -------------  |
+| Bid         |      yes       |
+| Ask         |      yes       |
+| BidTime     |      yes       |
+| AskTime     |      yes       |
+| OriginTime  |      yes       |
+| PriceID     |      yes       |
+| BidSpot     |      yes       |
+| AskSpot     |      yes       |
+| BidForwardPoints | yes       |
+| BidForwardPoints | yes       |
+| AskForwardPoints | yes       |
+| SystemTime  |      yes       |
 
 
 #### Subscription Status Events
@@ -480,17 +516,16 @@ Upon receiving a status update in the form of a
 `SubscriptionStatusEvent`, you'll want to access the data inside of it.
 There are three properties:
 
-- A `Subject` called Subject gives the subject of the subscription the
-status update refers to.
+- A `Subject` gives the price subject of the subscription that the update refers to.
 - A `SubscriptionStatus` containing an enum value that defines the
 status of the subscription.
-- A `std::string` containing a more detailed reason of the change in
+- A `std::string` containing a more detailed reason for the change in
 status.
 
 The data can be accessed as follows:
 
 ```cpp
-// Your event delegate for subscription status events
+// Your callback function for subscription status events
 void ApiExample::OnSubscriptionStatus(SubscriptionStatusEvent& event)
 {
     Subject subject = event.GetSubject();
@@ -499,33 +534,30 @@ void ApiExample::OnSubscriptionStatus(SubscriptionStatusEvent& event)
 }
 ```
 
-Most subscription status' result from temporary issues that can be
-resolved by the price service. For example, if a connection goes down
-and fails over then the API will publish a recoverable status code such
+Most subscription status' result from temporary issues that can be resolved by the price service. For example, if a connection goes down
+and fails-over then the API will publish a recoverable status code such
 as `SubscriptionStatus::STALE` and then quickly reconnect and resume
 publishing prices again.
 
-Other status codes are more serious and tend to be semi-permanent in
-nature; examples are, bad symbols, invalid price source, user
-authentication or authorisation error. These are normally unrecoverable
-without some admin user intervention followed by re-subscribing. That
-said, in a long running application we need every type of error the be
+Other status codes are more severe and tend to be semi-permanent in
+nature; examples are, incorrect symbols, invalid price source, user
+authentication or authorisation error. These are generally unrecoverable
+without some admin user intervention followed by resubscribing. That
+said, in a long-running application, we need every type of error the be
 potentially recoverable in time without the need to restart the
 application. So if a subscription comes back with a server status code,
 such as the liquidity provider's remote feed not running, the API will
 automatically resubscribe periodically in an attempt to recover. This
 re-subscription interval is, by default, a relatively long 5 minutes to
-prevent overly stressing the server with bad subscriptions. The time
-interval can however be configured if required by setting the session
+prevent overstressing the server with bad subscriptions. You can change the time interval by setting the session
 property `SubscriptionRefreshInterval`.
 
 #### Connection Status Events
 
-When the price session is started it will create and start connections
+Upon starting the price session, the API will create and initiate connections
 to each of it's providing services. Each service connection will be
-initially in a down state with the status
-`ProviderStatus.TemporarilyDown`. As connections come online or go
-offline they send status updates in the form of `ProviderStatusEvents`.
+initially in a downstate with the status
+`ProviderStatus.TemporarilyDown`. As links come online or go offline, they send status updates in the form of `ProviderStatusEvents`.
 Clients can register callbacks to receive notification of these events.
 
 ```cpp
@@ -549,7 +581,7 @@ pricing_.SetProviderStatusEventCallback(provider_callback);
 #### Accessing provider properties
 
 It is possible to access the current properties of each provider by
-calling `GetProviderProperties` on the price session. This gives the
+calling `GetProviderProperties` on the price session. This call gives the
 current status of each provider. For example:
 
 ```cpp
@@ -561,7 +593,7 @@ for (ProviderProperties& properties : pricing_->GetProviderProperties())
 
 #### Stop the price session
 
-When you are finished with the pricing session you should stop the
+When finished with the pricing session, you should stop the
 session to free up its resources by calling `Stop`. For example:
 
 ```cpp
@@ -571,34 +603,32 @@ pricing_->Stop();
 
 ### Logging
 
-The API makes use of the logging framework spdlog for logging important
-activity and errors. As a guide we log high volume messages, such as
-price ticks, at `debug` level so they are easily disabled via
-configuration. Server connection attempts are logged at info level, as
-are subscriptions. Connections failures are logged at `warn` level.
+The API makes use of the logging framework **spdlog** for logging important
+activity and errors. As a guide, we log high volume messages, such as
+price ticks, at `debug` level, so they omitted from production logs. Server connection attempts are logged at info level, as
+are subscriptions. We log connections failures at `warn` level.
 
 We suggest setting the log level to `info` in a production system to
-keep the level of logging manageable. If you choose to enable debug
-logging in production then there will be a performance impact when
-prices update quickly.
+keep the level of logging manageable. If you enable `debug`
+logging in production, then there will be a performance impact when
+prices update very quickly.
 
-Logging is configured using the LoggerFactory class.
+Use the `LoggerFactory` class to configure logging level granularity.
 
-Log messages are sent to sinks. There are several sinks available,
+There are several log message sinks available,
 including Stdout, DailyFile, and RotatingFile. Multiple sinks can be
 configured, with independent logging levels. When adding a log sink
 (described below), a shared pointer to the sink is returned. This
 pointer allows you to set the log level using
 `set_level(spdlog::level::level_enum level)`. The flush severity can
 also be configured using flush_on (spdlog::level::level_enum level).
-This setting will force the logger to flush its output when a log
-message of a certain level is received. Alternatively, the log level and
+This setting will force the logger to flush its output when a log message of a certain level is received. Alternatively, the log level and
 flush severity can be set globally using
 `LoggerFactory::SetLoglevel(spdlog::level::level_enum level)` and
 `LoggerFactory::SetFlushSeverity(spdlog::level::level_enum level)`.
-These methods will overwrite  any individual configurations.
+These methods will overwrite any individual configurations.
 
-#### Available Sinks
+#### Available Log Sinks
 
 ##### DailyFileLogger
 
@@ -657,30 +687,10 @@ logger->error("this is an error log message");
 
 ## Points of Presence
 
-BidFX provide a number of points-of-presence (POPs) around the world via
-which clients may connect to our global price service:
-
-### Production
-
-Clients are encouraged to connect to their geographically closest access
-point for minimum latency.
-
-| City 			| Environment   |     DNS name      |   IP    | Port |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
-| New York  |  PROD  | ny-tunnel.prod.tradingscreen.com  | 199.27.81.88 | 443 |
-| London  |  PROD  | ln-tunnel.prod.tradingscreen.com  | 199.27.86.88 | 443 |
-| Paris  |  PROD  | pa-tunnel.prod.tradingscreen.com  | 199.27.83.88 | 443 |
-| Tokyo  |  PROD  | to-tunnel.prod.tradingscreen.com  | 199.27.85.88 | 443 |
-| Hong Kong  |  PROD  | hk-tunnel.prod.tradingscreen.com  | 199.27.84.88 | 443 |
-
-### Test environments
+For a list of POPs where the API may be connected to
+see [Points of Presence](POP.md).
 
 
-We provide a test environment, feeding UAT market data. POPs for the
-test environments are available in New York and London, so some clients
-may experience additional latency.
+## Common Problems
 
-| City 			| Environment   |     DNS name      |   IP    | Port |
-| ------------- | ------------- | ------------- | ------------- | ------------- |
-| New York  |  UAT  | ny-tunnel.uatprod.tradingscreen.com  | 199.27.81.99 | 443 |
-| London  |  UAT  | ln-tunnel.uatprod.tradingscreen.com  | 199.27.86.91 | 443 |
+See [Common Problems](COMMON_PROBLEMS.md).
