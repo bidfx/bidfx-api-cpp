@@ -2,6 +2,23 @@
 
 # Public API for C++
 
+[![License](https://img.shields.io/badge/license-Apache%202-4EB1BA.svg)](https://www.apache.org/licenses/LICENSE-2.0.html)
+
+-------
+
+## API Features
+
+The BidFX C++ API is a price API that connects to the BidFX trading platform to subscribe to realtime pricing.
+The API supports the following features:
+
+ - FX streaming executable prices (RFS)
+ - FX request for quote (RFQ)
+ - FX and Futures trading from C++ is available via the REST.
+
+Most users of the API will trade against the received prices.
+Trading is achieved by making RESTful requests to post orders via the BidFX REST API.
+The REST API is easily accessed using C++.
+
 ## About BidFX
 
 BidFX is the market-leading provider of electronic trading solutions for the global foreign exchange marketplace. BidFX has addressed the challenges of
@@ -14,7 +31,7 @@ algo suites. You can read about all BidFX products on the
 [BidFX Website](https://www.bidfx.com).
 
 
-## BidFX APIs
+## Other APIs
 
 BidFX clients generally access the trading platform via a dedicated User Interface (UI) either on their desktop PC, web browser or mobile
 device.
@@ -33,22 +50,9 @@ at [BidFX API Overview](https://www.bidfx.com/apis).
 This document describes the BidFX Public API for C++.
 The C++ API is written purely in C++17. All of the code examples below
 are also presented in C++.
-
-We use the tag *Public* to indicated that, unlike our many private APIs,
+We use the tag *Public* to indicated that,
 this API is designed and maintained for public use by BidFX clients.
-The implies a degree of support, API stability and futute compatibility appropriate to client usage.
-
-### API Features
-
-The C++ API is predominantly a realtime price API. It supports the following features:
-
- - FX streaming executable prices (RFS)
- - FX request for quote (RFQ)
- - FX and Futures trading from C++ is available via the REST.
-
-Most users of the API will trade against the subscribed prices.
-This is achieved by making RESTful requests to post orders via the BidFX REST API.
-The REST API is easily accessed using C++.
+Being *public* implies a degree of support, API stability and futute compatibility appropriate to client usage.
 
 ### Realtime Price feeds
 
