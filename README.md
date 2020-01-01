@@ -79,8 +79,8 @@ Alternatively, clients may route their orders to the BidFX Strategy Server to mi
 
 The BidFX C++ API implements a highly optimised, bespoke binary protocol to deliver realtime quotes from LPs directly to into a client's application with minimal latency.
 The binary delivery mechanism is approximately 80 times more efficient than the FIX protocol.
-Furthermore, using the publish and subscribe paradigm, BidFX
-publish only those quotes that subscribed to.
+Furthermore, using the publish and subscribe paradigm, BidFX servers
+publish only those quotes that are subscribed to.
 
 ## API Set Up
 
