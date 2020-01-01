@@ -52,7 +52,8 @@ The C++ API is written purely in C++17. All of the code examples below
 are also presented in C++.
 We use the tag *Public* to indicated that,
 this API is designed and maintained for public use by BidFX clients.
-Being *public* implies a degree of support, API stability and futute compatibility appropriate to client usage.
+Being *public* implies a degree of support, API stability and future
+compatibility appropriate to client usage.
 
 ### Realtime Price feeds
 
@@ -83,6 +84,17 @@ publish only those quotes that subscribed to.
 
 ## API Set Up
 
+### Clone Git Repository
+
+As part of the BidFX Open Source initiative,
+we have published the source code for the C++ API on the
+[BidFX Github Page](https://github.com/bidfx).
+You can clone the API with the following command.
+
+```sh
+git clone https://github.com/bidfx/bidfx-api-cpp.git
+```
+
 ### OS Specific Set Up
 
 To use the API, you will need to install the `ZLib` data compression library.
@@ -109,6 +121,18 @@ We use the **CLion** IDE from JetBrains. You can configure CLion as follows.
     - Configure the debug profile.
         - Set the following CMake options `-DCMAKE_BUILD_TYPE=Debug -Dtest=TRUE -Dgtest_disable_pthreads=ON`
 
+
+
+### Building With Make
+
+If you prefer to build on the command line, using the makefile,
+then the following command can be used.
+
+```sh
+cd public-api-cpp
+cmake .
+make
+```
 
 ## API Usage
 
