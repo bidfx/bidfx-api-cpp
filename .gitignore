@@ -6,3 +6,12 @@ cmake-build-release/*
 cmake-build-test/*
 html/*
 latex/*
+CMakeCache.txt
+CMakeFiles/*
+CTestTestfile.cmake
+Makefile
+cmake_install.cmake
+config.h
+googletest-build/*
+googletest-download/*
+googletest-src/*
