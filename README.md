@@ -84,10 +84,10 @@ publish only those quotes that subscribed to.
 
 ## API Set Up
 
-### Clone Git Repository
+### Git Repository
 
 As part of the BidFX Open Source initiative,
-we have published the source code for the C++ API on the
+we have published the source code for the BidFX C++ API on the
 [BidFX Github Page](https://github.com/bidfx).
 You can clone the API with the following command.
 
@@ -126,7 +126,7 @@ We use the **CLion** IDE from JetBrains. You can configure CLion as follows.
 ### Building With Make
 
 If you prefer to build on the command line, using the makefile,
-then the following command can be used.
+then the following commands can be used.
 
 ```sh
 cd public-api-cpp
