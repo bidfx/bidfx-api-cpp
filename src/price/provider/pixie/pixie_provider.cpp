@@ -420,6 +420,7 @@ void PixieProvider::OnConnectionError()
     writer_thread_count_ ++;
     disconnection_triggered_ = false;
     subject_set_register_.Reset();
+    SetProviderStatus(Status::DOWN, "Connection Error");
 }
 
 provider::Provider::Status PixieProvider::GetStatus()
