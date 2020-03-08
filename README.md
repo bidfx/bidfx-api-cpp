@@ -1,4 +1,4 @@
-![BidFX-C++-API](https://user-images.githubusercontent.com/2197551/76166473-b92c6e80-6156-11ea-9f25-afb0d06ad4e7.png)
+![BidFX-C++-API](https://user-images.githubusercontent.com/2197551/76166473-b92c6e80-6156-11ea-9f25-afb0d06ad4e7.png =640x)
 
 # Public API for C++
 
