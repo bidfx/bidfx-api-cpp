@@ -46,6 +46,7 @@ namespace bidfx_public_api::price::pixie
 {
 
 using bidfx_public_api::price::pixie::PixieMessageType;
+using bidfx_public_api::price::ProtocolOptions;
 using bidfx_public_api::tools::LoggerFactory;
 using bidfx_public_api::tools::LoggingUtils;
 using bidfx_public_api::tools::NameCache;
@@ -53,7 +54,7 @@ using bidfx_public_api::exceptions::IllegalStateException;
 
 std::shared_ptr<spdlog::logger> PixieProvider::Log = nullptr;
 
-PixieProvider::PixieProvider(UserInfo* user_info) : AbstractProvider(user_info, "static://highway")
+PixieProvider::PixieProvider(UserInfo* user_info) : AbstractProvider(user_info, "static://highway"), protocol_options_(PixieProtocolOptions())
 {
     if (Log == nullptr)
     {
@@ -62,7 +63,6 @@ PixieProvider::PixieProvider(UserInfo* user_info) : AbstractProvider(user_info, 
 
     user_info_ = user_info;
     name_ = NameCache::GetDefault().CreateUniqueName("PixieProvider");
-    protocol_options_ = PixieProtocolOptions();
 }
 
 void PixieProvider::Subscribe(Subject subject)
@@ -106,7 +106,7 @@ void PixieProvider::InitiatePriceServerConnection(SSLClient& ssl_client)
     OnConnectionError();
 }
 
-void PixieProvider::Login(InputStream& in, OutputStream& out, PixieProtocolOptions& options, SSLClient& ssl_client)
+void PixieProvider::Login(InputStream& in, OutputStream& out, const PixieProtocolOptions& options, SSLClient& ssl_client)
 {
     std::string protocol_signature = protocol_options_.GetProtocolSignature();
     WriteProtocolSignature(out, protocol_signature);
@@ -428,6 +428,11 @@ provider::Provider::Status PixieProvider::GetStatus()
     return provider_status_;
 }
 
+const ProtocolOptions& PixieProvider::GetProtocolOptions() const
+{
+    return protocol_options_;
+}
+
 PixieProvider::PriceSyncVisitor::PriceSyncVisitor(PixieProvider& pixie_provider, std::vector<Subject>& subject_set) : pixie_provider(pixie_provider), subject_set_(subject_set)
 {}
 
@@ -472,6 +477,5 @@ void PixieProvider::PriceSyncVisitor::HandlePriceUpdateEvent(uint32_t sid, std::
         pixie_provider.PublishPriceUpdate(subject, price, replaceAllFields);
     }
 }
-
 
 } // namespace bidfx_public_api::price::pixie

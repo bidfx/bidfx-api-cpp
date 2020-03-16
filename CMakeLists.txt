@@ -190,7 +190,8 @@ add_library(
         src/exceptions/decoding_exception.cpp
         include/exceptions/illegal_state_exception.h
         src/exceptions/illegal_state_exception.cpp
-        src/tools/optional.h)
+        src/tools/optional.h
+        src/price/provider/protocol_options.h)
 
 # Concurrency
 #add_subdirectory(lib/junction-master)

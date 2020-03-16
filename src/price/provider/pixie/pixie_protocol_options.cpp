@@ -20,25 +20,26 @@
 namespace bidfx_public_api::price::pixie
 {
 
-PixieProtocolOptions::PixieProtocolOptions()
+PixieProtocolOptions::PixieProtocolOptions() : heartbeat_interval_(std::chrono::milliseconds(15000)), idle_(std::chrono::milliseconds(120000)), minti_(0), version_(PixieVersion::CURRENT_VERSION)
 {
-    heartbeat_interval_ = std::chrono::milliseconds(15000);
-    idle_ = std::chrono::milliseconds(120000);
-    minti_ = 0;
-    version_ = PixieVersion::CURRENT_VERSION;
 }
 
-bool PixieProtocolOptions::CompressSubscriptions()
+std::string PixieProtocolOptions::GetName() const
+{
+    return "Pixie";
+}
+
+bool PixieProtocolOptions::CompressSubscriptions() const
 {
     return false;
 }
 
-std::chrono::milliseconds PixieProtocolOptions::GetHeartbeatInterval()
+std::chrono::milliseconds PixieProtocolOptions::GetHeartbeatInterval() const
 {
     return heartbeat_interval_;
 }
 
-std::string PixieProtocolOptions::GetProtocolSignature()
+std::string PixieProtocolOptions::GetProtocolSignature() const
 {
     std::stringstream signature;
     signature << "pixie://localhost?version=" << version_ << "&heartbeat=" << heartbeat_interval_.count() / 1000 << "&idle=" << idle_.count() / 1000;
@@ -53,16 +54,17 @@ std::string PixieProtocolOptions::GetProtocolSignature()
     return ret;
 }
 
-int PixieProtocolOptions::GetVersion()
+int PixieProtocolOptions::GetVersion() const
 {
     return version_;
 }
 
-std::chrono::milliseconds PixieProtocolOptions::GetIdleInterval(){
+std::chrono::milliseconds PixieProtocolOptions::GetIdleInterval() const
+{
     return idle_;
 }
 
-int PixieProtocolOptions::GetMinti()
+int PixieProtocolOptions::GetMinti() const
 {
     return minti_;
 }

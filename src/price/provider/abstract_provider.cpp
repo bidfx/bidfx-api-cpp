@@ -42,7 +42,7 @@ AbstractProvider::AbstractProvider(UserInfo* user_info, std::string service) : t
         Log = LoggerFactory::GetLogger("AbstractProvider");
     }
 
-    Log->info("creating provider: PIXIE");
+    Log->info("creating provider: " + GetName());
 
     provider_status_ = Status::UNAVAILABLE;
     user_info_ = user_info;
@@ -72,7 +72,7 @@ void AbstractProvider::CreateConnection()
 {
     try
     {
-        ssl_client_ = tunnel_connector_.Connect();
+        ssl_client_ = tunnel_connector_.Connect(GetProtocolOptions().GetHeartbeatInterval() * 2);
         InitiatePriceServerConnection(*ssl_client_);
         ssl_client_->Close();
     }

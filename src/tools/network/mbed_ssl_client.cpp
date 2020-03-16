@@ -24,6 +24,7 @@
 #include <sstream>
 #include <cstring>
 #include <iostream>
+#include <chrono>
 #include "mbed_ssl_client.h"
 
 #define DEBUG_LEVEL 1
@@ -31,10 +32,12 @@
 namespace bidfx_public_api::tools
 {
 
-MBedSSLClient::MBedSSLClient(std::string host, int port) : output_stream_(OutputStreamImpl(*this)), input_stream_(InputStreamImpl(*this))
+MBedSSLClient::MBedSSLClient(std::string host, int port, std::chrono::milliseconds read_timeout)
+        : output_stream_(OutputStreamImpl(*this)), input_stream_(InputStreamImpl(*this))
 {
     host_ = host;
     port_ = port;
+    read_timeout_ = read_timeout;
 }
 
 void MBedSSLClient::Start()
@@ -61,6 +64,7 @@ void MBedSSLClient::InitializeSessionData()
     mbedtls_net_init(&server_fd_);
     mbedtls_ssl_init(&ssl_);
     mbedtls_ssl_config_init(&conf_);
+    mbedtls_ssl_conf_read_timeout(&conf_, read_timeout_.count());
     mbedtls_x509_crt_init(&cacert_);
     mbedtls_ctr_drbg_init(&ctr_drbg_);
 

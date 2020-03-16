@@ -16,35 +16,38 @@
 #ifndef PUBLIC_API_CPP_PRICE_PLUGIN_PIXIE_PIXIE_PROTOCOL_OPTIONS_H_
 #define PUBLIC_API_CPP_PRICE_PLUGIN_PIXIE_PIXIE_PROTOCOL_OPTIONS_H_
 
+#include "../protocol_options.h"
 #include <string>
 #include <chrono>
 
 namespace bidfx_public_api::price::pixie
 {
 
-class PixieProtocolOptions
+class PixieProtocolOptions : public ProtocolOptions
 {
 private:
     int version_;
     std::chrono::milliseconds heartbeat_interval_;
     std::chrono::milliseconds idle_;
     int minti_;
-    long subscription_interval_;
-    bool compress_subscriptions_;
 public:
     explicit PixieProtocolOptions();
 
-    bool CompressSubscriptions();
+    ~PixieProtocolOptions() override = default;
 
-    std::chrono::milliseconds GetHeartbeatInterval();
+    std::string GetName() const override;
 
-    int GetVersion();
+    bool CompressSubscriptions() const override ;
 
-    std::chrono::milliseconds GetIdleInterval();
+    std::chrono::milliseconds GetHeartbeatInterval() const override ;
 
-    int GetMinti();
+    int GetVersion() const override ;
 
-    std::string GetProtocolSignature();
+    std::chrono::milliseconds GetIdleInterval() const override ;
+
+    int GetMinti() const override ;
+
+    std::string GetProtocolSignature() const override ;
 };
 
 } // namespace bidfx_public_api::price::pixie
