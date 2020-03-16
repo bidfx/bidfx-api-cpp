@@ -38,11 +38,11 @@ TunnelConnector::TunnelConnector(UserInfo& user_info, std::string service) : use
     }
 }
 
-std::unique_ptr<SSLClient> TunnelConnector::Connect()
+std::unique_ptr<SSLClient> TunnelConnector::Connect(std::chrono::milliseconds read_timeout)
 {
     try
     {
-        std::unique_ptr<MBedSSLClient> ssl_client = std::make_unique<MBedSSLClient>(user_info_.GetHost(), user_info_.GetPort());
+        std::unique_ptr<MBedSSLClient> ssl_client = std::make_unique<MBedSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
         ssl_client->Start();
 
         if (user_info_.IsTunnelRequired())

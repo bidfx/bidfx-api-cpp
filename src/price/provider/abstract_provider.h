@@ -27,6 +27,7 @@
 #include "lib/logging/spdlog/spdlog.h"
 #include "lib/logging/spdlog/logger.h"
 #include "src/price/subscription.h"
+#include "protocol_options.h"
 
 namespace bidfx_public_api::price::provider
 {
@@ -91,6 +92,8 @@ public:
      * Stops the price provider and free up its network and file resources.
      */
     void Stop() override;
+
+    virtual const ProtocolOptions& GetProtocolOptions() const = 0;
 
     ProviderProperties GetProperties() override;
 

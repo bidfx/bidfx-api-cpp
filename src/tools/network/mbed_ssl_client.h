@@ -69,6 +69,7 @@ int main( void )
 #include "output_stream.h"
 
 #include <string>
+#include <chrono>
 
 namespace bidfx_public_api::tools
 {
@@ -103,6 +104,7 @@ private:
     const char* pers = "ssl_client1";
     std::string host_;
     int port_;
+    std::chrono::milliseconds read_timeout_;
 
     mbedtls_net_context server_fd_;
     uint32_t flags_;
@@ -125,7 +127,8 @@ private:
     char* GetErrorMessage(int value);
 
 public:
-    MBedSSLClient(std::string host, int port);
+    MBedSSLClient(std::string host, int port, std::chrono::milliseconds read_timeout);
+    void SetReadTimeout(std::chrono::milliseconds read_timeout);
     void Start() override;
     void Close() override;
 

@@ -42,6 +42,7 @@ namespace bidfx_public_api::price::pixie
 
 using bidfx_public_api::tools::GUID;
 using bidfx_public_api::tools::MBedSSLClient;
+using bidfx_public_api::price::ProtocolOptions;
 using bidfx_public_api::price::provider::AbstractProvider;
 using bidfx_public_api::price::provider::ProviderConsumer;
 using bidfx_public_api::price::provider::ProviderProperties;
@@ -58,8 +59,8 @@ class PixieProvider : public AbstractProvider
 private:
     static std::shared_ptr<spdlog::logger> Log;
 
+    const PixieProtocolOptions protocol_options_;
     std::atomic_int writer_thread_count_ = 0;
-    PixieProtocolOptions protocol_options_;
     PriceSyncDecoder price_sync_decoder_;
     int negotiated_version_;
 
@@ -77,7 +78,7 @@ private:
 
     bool disconnection_triggered_ = false;
 
-    void Login(InputStream& in, OutputStream& out, PixieProtocolOptions& options, SSLClient& ssl_client);
+    void Login(InputStream& in, OutputStream& out, const PixieProtocolOptions& options, SSLClient& ssl_client);
     void WriteProtocolSignature(OutputStream& out, std::string url);
     WelcomeMessage ReadWelcomeMessage(InputStream& in, SSLClient& ssl_client);
     GrantMessage ReadGrantMessage(InputStream& in, SSLClient& ssl_client);
@@ -99,13 +100,14 @@ protected:
     void InitiatePriceServerConnection(SSLClient& ssl_client) override;
 
 public:
-    PixieProvider(UserInfo *user_info);
+    explicit PixieProvider(UserInfo *user_info);
 
     void Start() override;
 
     void Subscribe(Subject subject, bool refresh) override;
     void Subscribe(Subject subject) override;
     void Unsubscribe(Subject& subject) override;
+    const price::ProtocolOptions& GetProtocolOptions() const override;
 
     Provider::Status GetStatus() override;
 
