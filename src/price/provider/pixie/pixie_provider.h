@@ -76,7 +76,7 @@ private:
 
     std::chrono::high_resolution_clock::time_point last_write_time_;
 
-    bool disconnection_triggered_ = false;
+    std::atomic<bool> disconnection_triggered_ = std::atomic<bool>(false);
 
     void Login(InputStream& in, OutputStream& out, const PixieProtocolOptions& options, SSLClient& ssl_client);
     void WriteProtocolSignature(OutputStream& out, std::string url);

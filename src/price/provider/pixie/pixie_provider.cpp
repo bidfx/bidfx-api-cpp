@@ -176,7 +176,7 @@ void PixieProvider::MainLoop(InputStream& in, OutputStream& out, SSLClient& ssl_
 
     try
     {
-        while (IsRunning() && !disconnection_triggered_)
+        while (IsRunning() && !disconnection_triggered_.load())
         {
             HandleNextMessage(in, ssl_client);
         }
