@@ -53,8 +53,6 @@ add_library(
         src/price/provider/pixie/pixie_protocol_options.h
         src/price/provider/pixie/pixie_protocol_options.cpp
         src/tools/network/ssl_client.h
-        src/tools/network/mbed_ssl_client.h
-        src/tools/network/mbed_ssl_client.cpp
         include/session.h
         include/price_update_event.h
         include/subscriber.h
@@ -70,7 +68,7 @@ add_library(
         include/price/subject/subject_builder.h
         src/price/subject/subject_builder.cpp
         src/price/subject/subject.cpp
-       	include/tenor.h
+        include/tenor.h
         src/tenor.cpp
         include/price/subject/subject_utils.h
         src/price/subject/subject_utils.cpp
@@ -191,7 +189,7 @@ add_library(
         include/exceptions/illegal_state_exception.h
         src/exceptions/illegal_state_exception.cpp
         src/tools/optional.h
-        src/price/provider/protocol_options.h)
+        src/price/provider/protocol_options.h src/tools/network/open_ssl_client.cpp)
 
 # Concurrency
 #add_subdirectory(lib/junction-master)
@@ -201,14 +199,15 @@ include_directories(lib/logging/)
 set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DCPP_DEBUG")
 
 # SSL client (mbedtls)
-add_subdirectory(lib/mbedtls)
-find_library(mbedtls mbedtls lib/mbedtls)
+#add_subdirectory(lib/mbedtls)
+#find_library(mbedtls mbedtls lib/mbedtls)
+find_package(OpenSSL REQUIRED)
 
 # zlib
 find_package(ZLIB REQUIRED)
 include_directories(${ZLIB_INCLUDE_DIRS})
 
-target_link_libraries(bidfx_public_api mbedtls ${ZLIB_LIBRARIES})
+target_link_libraries(bidfx_public_api ${ZLIB_LIBRARIES} OpenSSL::SSL)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR CYGWIN)
     target_link_libraries(bidfx_public_api crypt32)
@@ -313,7 +312,7 @@ add_executable(runTests
         test/price/provider/provider_status_test.cpp
         test/subscription_status_test.cpp)
 
-target_link_libraries(runTests gtest gmock_main bidfx_public_api mbedtls Threads::Threads)
+target_link_libraries(runTests gtest gmock_main bidfx_public_api Threads::Threads)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR CYGWIN)
     target_link_libraries(runTests crypt32)
@@ -326,7 +325,7 @@ add_executable(bidfx_public_api_example example/api_example.cpp example/api_exam
 
 include_directories(lib/mbedtls/include)
 
-target_link_libraries(bidfx_public_api_example bidfx_public_api mbedtls Threads::Threads)
+target_link_libraries(bidfx_public_api_example bidfx_public_api Threads::Threads)
 
 if (${CMAKE_SYSTEM_NAME} MATCHES "Windows" OR CYGWIN)
     target_link_libraries(bidfx_public_api_example crypt32)

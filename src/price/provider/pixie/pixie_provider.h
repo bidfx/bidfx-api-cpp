@@ -19,6 +19,7 @@
 #include <atomic>
 #include <thread>
 #include <chrono>
+#include <src/tools/network/open_ssl_client.h>
 #include "include/user_info.h"
 #include "src/price/provider/provider_consumer.h"
 #include "src/price/provider/abstract_provider.h"
@@ -29,7 +30,7 @@
 #include "src/price/provider/pixie/messages/data_dictionary_message.h"
 #include "src/price/provider/pixie/messages/price_sync_decoder.h"
 #include "src/tools/guid.h"
-#include "src/tools/network/mbed_ssl_client.h"
+//#include "src/tools/network/open_ssl_client.h"
 #include "pixie_protocol_options.h"
 #include "subject_set_register.h"
 #include "ack_data.h"
@@ -41,7 +42,7 @@ namespace bidfx_public_api::price::pixie
 {
 
 using bidfx_public_api::tools::GUID;
-using bidfx_public_api::tools::MBedSSLClient;
+//using bidfx_public_api::tools::OpenSSLClient;
 using bidfx_public_api::price::ProtocolOptions;
 using bidfx_public_api::price::provider::AbstractProvider;
 using bidfx_public_api::price::provider::ProviderConsumer;

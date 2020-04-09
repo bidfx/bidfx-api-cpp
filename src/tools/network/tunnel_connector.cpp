@@ -21,7 +21,7 @@
 #include "include/tools/base64.h"
 #include "include/tools/logger_factory.h"
 #include "tunnel_connector.h"
-#include "src/tools/network/mbed_ssl_client.h"
+#include "open_ssl_client.h"
 
 namespace  bidfx_public_api::tools
 {
@@ -42,7 +42,7 @@ std::unique_ptr<SSLClient> TunnelConnector::Connect(std::chrono::milliseconds re
 {
     try
     {
-        std::unique_ptr<MBedSSLClient> ssl_client = std::make_unique<MBedSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
+        std::unique_ptr<SSLClient> ssl_client = std::make_unique<OpenSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
         ssl_client->Start();
 
         if (user_info_.IsTunnelRequired())
