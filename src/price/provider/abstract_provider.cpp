@@ -63,7 +63,8 @@ void AbstractProvider::ContinuouslyConnectLoop()
         CreateConnection();
         if (IsRunning())
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10000));
+            Log->info("Will reconnect in 10 seconds");
+            std::this_thread::sleep_for(std::chrono::seconds(10));
         }
     }
 }
