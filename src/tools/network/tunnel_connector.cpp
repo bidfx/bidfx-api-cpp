@@ -1,4 +1,4 @@
-/**  Copyright 2019 BidFX
+/**  Copyright 2020 BidFX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 #include "include/tools/base64.h"
 #include "include/tools/logger_factory.h"
 #include "tunnel_connector.h"
-#include "src/tools/network/mbed_ssl_client.h"
+#include "open_ssl_client.h"
 
 namespace  bidfx_public_api::tools
 {
@@ -42,7 +42,8 @@ std::unique_ptr<SSLClient> TunnelConnector::Connect(std::chrono::milliseconds re
 {
     try
     {
-        std::unique_ptr<MBedSSLClient> ssl_client = std::make_unique<MBedSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
+        Log->info("Connecting to {}:{} with read timeout {}ms", user_info_.GetHost(), user_info_.GetPort(), read_timeout.count());
+        std::unique_ptr<SSLClient> ssl_client = std::make_unique<OpenSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
         ssl_client->Start();
 
         if (user_info_.IsTunnelRequired())
@@ -55,7 +56,7 @@ std::unique_ptr<SSLClient> TunnelConnector::Connect(std::chrono::milliseconds re
     catch (std::ios_base::failure &e)
     {
         Log->warn("exception during handshake (SSL Client): {}", e.what());
-        throw e;
+        throw std::ios_base::failure(e);
     }
 }
 

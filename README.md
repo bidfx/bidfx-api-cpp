@@ -97,7 +97,7 @@ git clone https://github.com/bidfx/bidfx-api-cpp.git
 
 ### OS Specific Set Up
 
-To use the API, you will need to install the `ZLib` data compression library.
+To use the API, you will need to install the `ZLib` data compression library and `OpenSSL` cryptography library.
 
  - **Ubuntu:** Install `zlib1g-dev` by running
 `sudo apt-get install zlib1g-dev` in a terminal.
@@ -105,7 +105,7 @@ To use the API, you will need to install the `ZLib` data compression library.
  - **Mac OS X:**  Install the Apple *xcode* command line tools by running
 `xcode-select --install` in a terminal.
 
- - **Windows (cygwin):** Install the `zlib-devel` package.
+ - **Windows (cygwin):** Install the `zlib-devel`, `libssl-devel`, and `openssl` packages.
 
 
 ### Configuring your IDE
