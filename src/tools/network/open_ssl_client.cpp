@@ -113,13 +113,22 @@ SSL_CTX* OpenSSLClient::InitCTX()
 
     OpenSSL_add_all_algorithms();  /* Load cryptos, et.al. */
     SSL_load_error_strings();   /* Bring in and register error messages */
-    method = TLS_client_method(); /* Create new client-method instance */
+    /* Create new client-method instance */
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
+    method = TLS_client_method();
+#elif OPENSSL_VERSION_NUMBER >= 0x10002000L && !defined OPENSSL_NO_TLS1_2_METHOD
+    method = TLS_v1_2_client_method();
+#else
+#error "OpenSSL version must suppport TLS_v1_2"
+#endif
+
     ctx = SSL_CTX_new(method);   /* Create new context */
     if ( ctx == nullptr )
     {
         std::string error = OpenSSLErrAsString();
         throw std::ios_base::failure("Could not initialize SSL context: " + error);
     }
+    SSL_CTX_set_min_proto_version(ctx, TLS1_2_VERSION);
     return ctx;
 }
 
