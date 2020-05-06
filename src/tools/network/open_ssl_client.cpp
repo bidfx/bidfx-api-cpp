@@ -117,7 +117,7 @@ SSL_CTX* OpenSSLClient::InitCTX()
 #if OPENSSL_VERSION_NUMBER >= 0x10100000L
     method = TLS_client_method();
 #elif OPENSSL_VERSION_NUMBER >= 0x10002000L && !defined OPENSSL_NO_TLS1_2_METHOD
-    method = TLS_v1_2_client_method();
+    method = TLSv1_2_client_method();
 #else
 #error "OpenSSL version must suppport TLS_v1_2"
 #endif
