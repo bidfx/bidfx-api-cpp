@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 
 SET(CMAKE_C_FLAGS_DEBUG "-D_DEBUG")
 
-project(bidfx_public_api_cpp VERSION 1.1.2 DESCRIPTION "BidFX Public C++ API for accessing price streams")
+project(bidfx_public_api_cpp VERSION 1.1.3 DESCRIPTION "BidFX Public C++ API for accessing price streams")
 
 configure_file(src/config.h.in config.h)
 include_directories(. ${CMAKE_CURRENT_BINARY_DIR})
