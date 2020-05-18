@@ -128,7 +128,9 @@ SSL_CTX* OpenSSLClient::InitCTX()
         std::string error = OpenSSLErrAsString();
         throw std::ios_base::failure("Could not initialize SSL context: " + error);
     }
+#if OPENSSL_VERSION_NUMBER >= 0x10100000L
     SSL_CTX_set_min_proto_version(ctx, TLS1_2_VERSION);
+#endif
     return ctx;
 }
 
