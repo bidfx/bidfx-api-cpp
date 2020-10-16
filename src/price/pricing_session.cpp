@@ -35,6 +35,7 @@ PricingSession::PricingSession(UserInfo* user_info)
     user_info_ = user_info;
     pricing_subscriber_ = new PricingSubscriber(this, user_info);
     pixie_provider_ = new PixieProvider(user_info);
+    running_ = ATOMIC_VAR_INIT(false);
     PrepareCallbacks();
 }
 
