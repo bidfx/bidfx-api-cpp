@@ -45,7 +45,7 @@ ApiExample::ApiExample()
     logger_ = LoggerFactory::GetLogger("ApiExample");
 
     session_ = PublicApi::CreateSession();
-    session_->SetHost("ny-tunnel.uatprod.tradingscreen.com").
+    session_->SetHost("api.ld.bidfx.biz ").
             SetUsername("").
             SetPassword("").
             SetDefaultAccount("FX_ACCT").
