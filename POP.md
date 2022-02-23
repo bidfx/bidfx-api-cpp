@@ -8,13 +8,12 @@ TLS secures all connections over a single port which is sufficient for both pric
 
 The table below lists the available productions POPs.
 
-| City      | Environment  |     DNS name                     | IP           | Port |
-| --------- | ------------ | -------------------------------- | ------------ | ---- |
-| New York  | PROD         | ny-tunnel.prod.tradingscreen.com | 199.27.81.88 |  443 |
-| London    | PROD         | ln-tunnel.prod.tradingscreen.com | 199.27.86.88 |  443 |
-| Paris     | PROD         | pa-tunnel.prod.tradingscreen.com | 199.27.83.88 |  443 |
-| Tokyo     | PROD         | to-tunnel.prod.tradingscreen.com | 199.27.85.88 |  443 |
-| Hong Kong | PROD         | hk-tunnel.prod.tradingscreen.com | 199.27.84.88 |  443 |
+| City      | Environment  |     DNS name         | IP           | Port |
+| --------- | ------------ | -------------------- | ------------ | ---- |
+| London    | PROD         | api.ld.bidfx.com     | 64.52.164.90 |  443 |
+| New York  | PROD         | api.ny.bidfx.com     | 64.52.165.90 |  443 |
+| Tokyo     | PROD         | api.ty.bidfx.com     | 64.52.166.90 |  443 |
+| Singapore | PROD         | api.sg.bidfx.com     | 64.52.167.90 |  443 |
 
 Clients are encouraged to connect to their geographically closest access
 point for minimum latency.
@@ -26,10 +25,10 @@ BidFX also provides dedicated User Acceptance Test (UAT) environments
 which clients can uses to test and certify their software before going into production.
 The table below lists the available UAT POPs.
 
-| City      | Environment | DNS name                            |   IP         | Port |
-| --------- | ----------- | ----------------------------------- | ------------ | ---- |
-| New York  | UAT         | ny-tunnel.uatprod.tradingscreen.com | 199.27.81.99 |  443 |
-| London    | UAT         | ln-tunnel.uatprod.tradingscreen.com | 199.27.86.91 |  443 |
+| City      | Environment | DNS name          |   IP         | Port |
+| --------- | ----------- | ----------------- | ------------ | ---- |
+| London    | UAT         | api.ld.bidfx.biz  | 64.52.164.80 |  443 |
+| Tokyo     | UAT         | api.ty.bidfx.biz  | 64.52.166.80 |  443 |
 
 UAT pricing subscriptions are routed to LP test sessions.
 These will quote prices similar to current market rates but will not compare well with production data,
