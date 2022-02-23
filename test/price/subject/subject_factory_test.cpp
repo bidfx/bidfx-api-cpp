@@ -22,7 +22,7 @@
 namespace bidfx_public_api::price::subject
 {
 
-UserInfo* USER_INFO = new BasicUserInfo("ln-tunnel.uatprod.tradingscreen.com", "fbennett", "FX_ACCT", "api_test", "1", "XYZCODE123");
+UserInfo* USER_INFO = new BasicUserInfo("api.ld.bidfx.biz", "fbennett", "FX_ACCT", "api_test", "1", "XYZCODE123");
 
 /*****************
  * Spot Tests - Valid Creation
@@ -548,7 +548,7 @@ TEST(SubjectFactoryTest, test_setting_fx_swap_stream_with_missing_far_leg)
 
 TEST(SubjectFactoryTest, test_setting_on_behalf_fx_spot_stream)
 {
-    UserInfo* strategy_user = new BasicUserInfo("ln-tunnel.uatprod.tradingscreen.com", "strategy", "FX_ACCT", "api_test", "1", "XYZCODE123");
+    UserInfo* strategy_user = new BasicUserInfo("api.ld.bidfx.biz", "strategy", "FX_ACCT", "api_test", "1", "XYZCODE123");
     SubjectFactory subject_factory = SubjectFactory(strategy_user);
 
     ASSERT_STREQ(
