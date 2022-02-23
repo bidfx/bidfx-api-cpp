@@ -162,7 +162,7 @@ etc.
 
 ```cpp
 std::unique_ptr<Session> session_ = PublicApi::CreateSession();
-session_->SetHost("ny-tunnel.uatdev.tradingscreen.com")
+session_->SetHost("api.ld.bidfx.biz")
         .SetUsername("acme_api")
         .SetPassword("secret_password!")
         .SetDefaultAccount("FX_ACCT")
@@ -331,7 +331,7 @@ Below are some examples on how to create subjects in different ways:
 
 ```cpp
 // To create a subject from scratch using the SubjectFactory, first you must provide UserInfo
-UserInfo* user_info = new BasicUserInfo("ln-tunnel.uatprod.tradingscreen.com", "fbennett",
+UserInfo* user_info = new BasicUserInfo("api.ld.bidfx.biz", "fbennett",
                                         "FX_ACCT", "api_test", "1", "XYZCODE123");
 
 SubjectFactory subject_factory = SubjectFactory(user_info);
