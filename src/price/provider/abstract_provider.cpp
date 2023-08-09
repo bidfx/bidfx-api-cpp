@@ -74,7 +74,7 @@ void AbstractProvider::CreateConnection()
     try
     {
         ssl_client_ = tunnel_connector_.Connect(GetProtocolOptions().GetHeartbeatInterval() * 2);
-        InitiatePriceServerConnection(*ssl_client_);
+        InitiatePriceServerConnection(ssl_client_);
         ssl_client_->Close();
     }
     catch(std::exception &e)

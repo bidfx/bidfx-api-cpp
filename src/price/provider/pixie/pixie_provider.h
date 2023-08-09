@@ -81,16 +81,16 @@ private:
 
     void Login(InputStream& in, OutputStream& out, const PixieProtocolOptions& options, SSLClient& ssl_client);
     void WriteProtocolSignature(OutputStream& out, std::string url);
-    WelcomeMessage ReadWelcomeMessage(InputStream& in, SSLClient& ssl_client);
-    GrantMessage ReadGrantMessage(InputStream& in, SSLClient& ssl_client);
-    ByteBuffer ReadMessageFrame(InputStream& in, SSLClient& ssl_client);
+    WelcomeMessage ReadWelcomeMessage(InputStream& in);
+    GrantMessage ReadGrantMessage(InputStream& in);
+    ByteBuffer ReadMessageFrame(InputStream& in);
     void CheckType(ByteBuffer& message_frame, const unsigned char& expected_type);
-    void MainLoop(InputStream& in, OutputStream& out, SSLClient& ssl_client);
-    void HandleNextMessage(InputStream& in, SSLClient& ssl_client);
+    void MainLoop(std::shared_ptr<SSLClient> ssl_client);
+    void HandleNextMessage(InputStream& in);
     void HandlePriceSync(PriceSync& price_sync);
     void OnDataDictionary(DataDictionaryMessage& dict_message);
-    void StartWriter(OutputStream& out, SSLClient& ssl_client);
-    void HandleAcksAndSendSubscriptionSyncsAndHeartbeats(OutputStream& out, int thread_num);
+    void StartWriter(std::shared_ptr<SSLClient> ssl_client);
+    void HandleAcksAndSendSubscriptionSyncsAndHeartbeats(std::shared_ptr<SSLClient> ssl_client, int thread_num);
     std::unique_ptr<AckData> PollNextAck();
     void PeriodicallyCheckSubscriptions(OutputStream& out);
     void CheckAndSendSubscriptions(OutputStream& out);
@@ -98,7 +98,7 @@ private:
     void OnConnectionError();
 
 protected:
-    void InitiatePriceServerConnection(SSLClient& ssl_client) override;
+    void InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl_client) override;
 
 public:
     explicit PixieProvider(UserInfo *user_info);

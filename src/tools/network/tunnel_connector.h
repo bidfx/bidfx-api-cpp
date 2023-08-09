@@ -46,7 +46,7 @@ private:
 
 public:
     TunnelConnector(UserInfo& user_info, std::string service);
-    std::unique_ptr<SSLClient> Connect(std::chrono::milliseconds read_timeout);
+    std::shared_ptr<SSLClient> Connect(std::chrono::milliseconds read_timeout);
 };
 
 
