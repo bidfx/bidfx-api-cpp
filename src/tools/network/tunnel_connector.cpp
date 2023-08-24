@@ -38,12 +38,12 @@ TunnelConnector::TunnelConnector(UserInfo& user_info, std::string service) : use
     }
 }
 
-std::unique_ptr<SSLClient> TunnelConnector::Connect(std::chrono::milliseconds read_timeout)
+std::shared_ptr<SSLClient> TunnelConnector::Connect(std::chrono::milliseconds read_timeout)
 {
     try
     {
         Log->info("Connecting to {}:{} with read timeout {}ms", user_info_.GetHost(), user_info_.GetPort(), read_timeout.count());
-        std::unique_ptr<SSLClient> ssl_client = std::make_unique<OpenSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
+        std::shared_ptr<SSLClient> ssl_client = std::make_shared<OpenSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
         ssl_client->Start();
 
         if (user_info_.IsTunnelRequired())

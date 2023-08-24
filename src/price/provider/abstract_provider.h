@@ -48,7 +48,7 @@ private:
 
     UserInfo* user_info_;
     TunnelConnector tunnel_connector_;
-    std::unique_ptr<SSLClient> ssl_client_;
+    std::shared_ptr<SSLClient> ssl_client_;
 
     std::atomic<RunState> run_state_ = RunState::INITIAL;
     CountdownLatch latch;
@@ -74,7 +74,7 @@ protected:
 
     void SetProviderStatus(Status status, std::string text);
 
-    virtual void InitiatePriceServerConnection(SSLClient& ssl_client_) = 0;
+    virtual void InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl_client_) = 0;
 
     bool IsRunning();
 

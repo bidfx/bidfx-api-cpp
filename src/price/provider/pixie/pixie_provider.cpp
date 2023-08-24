@@ -89,15 +89,15 @@ void PixieProvider::Start()
     });
 }
 
-void PixieProvider::InitiatePriceServerConnection(SSLClient& ssl_client)
+void PixieProvider::InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl_client)
 {
     try
     {
-        InputStream& input_stream = ssl_client.GetInputStream();
-        OutputStream& output_stream = ssl_client.GetOutputStream();
-        Login(input_stream, output_stream, protocol_options_, ssl_client);
+        InputStream& input_stream = ssl_client -> GetInputStream();
+        OutputStream& output_stream = ssl_client -> GetOutputStream();
+        Login(input_stream, output_stream, protocol_options_, *ssl_client);
         SetProviderStatus(Status::READY, "");
-        MainLoop(input_stream, output_stream, ssl_client);
+        MainLoop(ssl_client);
     }
     catch (std::ios_base::failure& e)
     {
@@ -110,7 +110,7 @@ void PixieProvider::Login(InputStream& in, OutputStream& out, const PixieProtoco
 {
     std::string protocol_signature = protocol_options_.GetProtocolSignature();
     WriteProtocolSignature(out, protocol_signature);
-    WelcomeMessage welcome_message = ReadWelcomeMessage(in, ssl_client);
+    WelcomeMessage welcome_message = ReadWelcomeMessage(in);
     Log->debug("after sending URL signature, received welcome: {}", welcome_message.ToString());
     negotiated_version_ = welcome_message.GetVersion();
     PixieVersion::ClientVerifyVersion(negotiated_version_);
@@ -122,7 +122,7 @@ void PixieProvider::Login(InputStream& in, OutputStream& out, const PixieProtoco
                             user_info_->GetApplication(), user_info_->GetApplicationVersion(), PublicApi::GetName(), PublicApi::GetVersion(), user_info_->GetProductSerialNumber());
 
     WriteMessage(message, out);
-    GrantMessage grant_message = ReadGrantMessage(in, ssl_client);
+    GrantMessage grant_message = ReadGrantMessage(in);
     Log->debug("received grant {}", grant_message.ToString());
     data_dictionary_ = std::make_unique<ExtendableDataDictionary>();
     if (!grant_message.IsGranted()) throw std::runtime_error(grant_message.GetReason());
@@ -141,17 +141,17 @@ void PixieProvider::WriteProtocolSignature(OutputStream& out, std::string url)
     delete[](bytes);
 }
 
-WelcomeMessage PixieProvider::ReadWelcomeMessage(InputStream& in, SSLClient& ssl_client)
+WelcomeMessage PixieProvider::ReadWelcomeMessage(InputStream& in)
 {
-    ByteBuffer welcome_frame = ReadMessageFrame(in, ssl_client);
+    ByteBuffer welcome_frame = ReadMessageFrame(in);
     CheckType(welcome_frame, PixieMessageType::WELCOME);
     return WelcomeMessage(welcome_frame);
     //mLastMsgRecTime = System.currentTimeMillis();
 }
 
-GrantMessage PixieProvider::ReadGrantMessage(InputStream& in, SSLClient& ssl_client)
+GrantMessage PixieProvider::ReadGrantMessage(InputStream& in)
 {
-    ByteBuffer grant_frame = ReadMessageFrame(in, ssl_client);
+    ByteBuffer grant_frame = ReadMessageFrame(in);
     CheckType(grant_frame, PixieMessageType::GRANT);
     return GrantMessage(grant_frame);
     //mLastMsgRecTime = System.currentTimeMillis();
@@ -169,16 +169,17 @@ void PixieProvider::CheckType(ByteBuffer& message_frame, const unsigned char& ex
     }
 }
 
-void PixieProvider::MainLoop(InputStream& in, OutputStream& out, SSLClient& ssl_client)
+void PixieProvider::MainLoop(std::shared_ptr<SSLClient> ssl_client)
 {
     Log->debug("entered main reading loop");
-    StartWriter(out, ssl_client);
+    StartWriter(ssl_client);
 
+    InputStream& in = ssl_client -> GetInputStream();
     try
     {
         while (IsRunning() && !disconnection_triggered_.load())
         {
-            HandleNextMessage(in, ssl_client);
+            HandleNextMessage(in);
         }
     }
     catch (std::ios_base::failure& e)
@@ -188,9 +189,9 @@ void PixieProvider::MainLoop(InputStream& in, OutputStream& out, SSLClient& ssl_
     }
 }
 
-void PixieProvider::HandleNextMessage(InputStream& in, SSLClient& ssl_client)
+void PixieProvider::HandleNextMessage(InputStream& in)
 {
-    ByteBuffer buffer = ReadMessageFrame(in, ssl_client);
+    ByteBuffer buffer = ReadMessageFrame(in);
     unsigned char msg_type = buffer.GetNextByte();
 
     if (msg_type == PixieMessageType::DATA_DICTIONARY)
@@ -245,7 +246,7 @@ void PixieProvider::HandlePriceSync(PriceSync& price_sync)
     }
 }
 
-ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in, SSLClient& ssl_client)
+ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
 {
     size_t frame_length = Varint::ReadU32(in);
 
@@ -298,17 +299,18 @@ void PixieProvider::OnDataDictionary(DataDictionaryMessage& dict_message)
     }
 }
 
-void PixieProvider::StartWriter(OutputStream& out, SSLClient& ssl_client)
+void PixieProvider::StartWriter(std::shared_ptr<SSLClient> ssl_client)
 {
     writer_thread_count_++;
     int current_writer_number = writer_thread_count_;
-    std::thread writer_thread(&PixieProvider::HandleAcksAndSendSubscriptionSyncsAndHeartbeats, this, std::ref(out), current_writer_number);
+    std::thread writer_thread(&PixieProvider::HandleAcksAndSendSubscriptionSyncsAndHeartbeats, this, ssl_client, current_writer_number);
     writer_thread.detach();
     Log->debug("started writer thread: {}", writer_thread_count_);
 }
 
-void PixieProvider::HandleAcksAndSendSubscriptionSyncsAndHeartbeats(OutputStream& out, int thread_num)
+void PixieProvider::HandleAcksAndSendSubscriptionSyncsAndHeartbeats(std::shared_ptr<SSLClient> ssl_client, int thread_num)
 {
+    OutputStream& out = ssl_client -> GetOutputStream();
     while (IsRunning() && thread_num == writer_thread_count_)
     {
         try
