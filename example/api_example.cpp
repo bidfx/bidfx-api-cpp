@@ -45,7 +45,8 @@ ApiExample::ApiExample()
     logger_ = LoggerFactory::GetLogger("ApiExample");
 
     session_ = PublicApi::CreateSession();
-    session_->SetHost("api.ld.bidfx.biz ").
+    session_->SetHost("api.ld.bidfx.biz").
+            SetPort(5553).
             SetUsername("").
             SetPassword("").
             SetDefaultAccount("FX_ACCT").
@@ -88,8 +89,20 @@ void ApiExample::RunTest()
 {
     logger_->info("pricing session is ready");
 
-    DealableStreams({"RBCFX", "SSFX", "MSFX", "CSFX", "JPMCFX", "HSBCFX"});
-    DealableQuotes({"RBSFX", "UBSFX", "NOMURAFX", "CITIFX"});
+//    DealableStreams({"RBCFX", "SSFX", "MSFX", "CSFX", "JPMCFX", "HSBCFX"});
+//    DealableQuotes({"RBSFX", "UBSFX", "NOMURAFX", "CITIFX"});
+
+    Subject subject1 = subscriber_->Subjects().Fx().Stream().Spot()
+            .LiquidityProvider("HSBCFX")
+            .CurrencyPair("EURUSD")
+            .Currency("EUR")
+            .Quantity(160000)
+            .BuySideAccount("FX_ACCT")
+            .CreateSubject();
+
+//    AssetClass=Fx,BuySideAccount=FX_ACCT,Currency=EUR,DealType=Spot,Level=1,LiquidityProvider=HSBCFX,Quantity=1230080.11,RequestFor=Stream,Symbol=EURUSD,Tenor=Spot,User=wpierce
+
+    subscriber_->Subscribe(subject1);
 
     std::this_thread::sleep_for(std::chrono::seconds(15));
 

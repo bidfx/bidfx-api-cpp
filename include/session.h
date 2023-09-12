@@ -39,6 +39,11 @@ public:
     virtual Session& SetHost(std::string host) = 0;
 
     /**
+     * Sets the host used to connect to BidFX service via.
+     */
+    virtual Session& SetPort(int port) = 0;
+
+    /**
      * Sets the username used to log into BidFX for pricing and trading.
      */
     virtual Session& SetUsername(std::string username) = 0;

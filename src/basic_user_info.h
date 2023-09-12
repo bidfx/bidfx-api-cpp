@@ -25,6 +25,7 @@ class BasicUserInfo : public UserInfo
 {
 private:
     std::string host_;
+    int         port_;
     std::string username_;
     std::string password_;
     std::string default_account_;
@@ -34,6 +35,9 @@ private:
 
 public:
     BasicUserInfo(std::string host, std::string username, std::string default_account, std::string application,
+                  std::string application_version, std::string product_serial_number);
+
+    BasicUserInfo(std::string host, int port, std::string username, std::string default_account, std::string application,
                   std::string application_version, std::string product_serial_number);
 
     std::string GetHost() override;

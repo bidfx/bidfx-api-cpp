@@ -39,6 +39,12 @@ Session& ApiSession::SetHost(std::string host)
     return *this;
 }
 
+Session& ApiSession::SetPort(int port)
+{
+    port_ = port;
+    return *this;
+}
+
 Session& ApiSession::SetUsername(std::string username)
 {
     username_ = username;
@@ -111,7 +117,7 @@ std::string ApiSession::GetProductSerialNumber()
 
 int ApiSession::GetPort()
 {
-    return 443;
+    return port_;
 }
 
 bool ApiSession::IsSSLRequired()
