@@ -19,11 +19,12 @@
 namespace bidfx_public_api
 {
 
-BasicUserInfo::BasicUserInfo(std::string host, int port, std::string username, std::string default_account, std::string application,
-                             std::string application_version, std::string product_serial_number)
+BasicUserInfo::BasicUserInfo(std::string host, int port, bool use_tunnel, std::string username, std::string default_account,
+                             std::string application, std::string application_version, std::string product_serial_number)
 {
     host_ = host;
     port_ = port;
+    use_tunnel_ = use_tunnel;
     username_ = username;
     default_account_ = default_account;
     application_ = application;
@@ -36,6 +37,7 @@ BasicUserInfo::BasicUserInfo(std::string host, int port, std::string username, s
     {
         host_ = host;
         port_ = 443;
+        use_tunnel_ = true;
         username_ = username;
         default_account_ = default_account;
         application_ = application;
@@ -85,12 +87,12 @@ int BasicUserInfo::GetPort()
 
 bool BasicUserInfo::IsSSLRequired()
 {
-    return GetPort() == 443 || GetPort() == 8443;
+    return IsTunnelRequired();
 }
 
 bool BasicUserInfo::IsTunnelRequired()
 {
-    return IsSSLRequired();
+    return use_tunnel_;
 }
 
 }

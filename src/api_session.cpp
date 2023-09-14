@@ -45,6 +45,12 @@ Session& ApiSession::SetPort(int port)
     return *this;
 }
 
+Session& ApiSession::SetUseTunnel(bool use_tunnel)
+{
+    use_tunnel_ = use_tunnel;
+    return *this;
+}
+
 Session& ApiSession::SetUsername(std::string username)
 {
     username_ = username;
@@ -122,12 +128,12 @@ int ApiSession::GetPort()
 
 bool ApiSession::IsSSLRequired()
 {
-    return GetPort() == 443 || GetPort() == 8443;
+    return IsTunnelRequired();
 }
 
 bool ApiSession::IsTunnelRequired()
 {
-    return IsSSLRequired();
+    return use_tunnel_;
 }
 
 Pricing& ApiSession::pricing()
