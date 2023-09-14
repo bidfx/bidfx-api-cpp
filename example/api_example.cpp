@@ -45,7 +45,9 @@ ApiExample::ApiExample()
     logger_ = LoggerFactory::GetLogger("ApiExample");
 
     session_ = PublicApi::CreateSession();
-    session_->SetHost("api.ld.bidfx.biz ").
+    session_->SetHost("api.ld.bidfx.biz").
+            SetPort(5553).
+            SetUseTunnel(true).
             SetUsername("").
             SetPassword("").
             SetDefaultAccount("FX_ACCT").

@@ -39,6 +39,18 @@ Session& ApiSession::SetHost(std::string host)
     return *this;
 }
 
+Session& ApiSession::SetPort(int port)
+{
+    port_ = port;
+    return *this;
+}
+
+Session& ApiSession::SetUseTunnel(bool use_tunnel)
+{
+    use_tunnel_ = use_tunnel;
+    return *this;
+}
+
 Session& ApiSession::SetUsername(std::string username)
 {
     username_ = username;
@@ -111,17 +123,17 @@ std::string ApiSession::GetProductSerialNumber()
 
 int ApiSession::GetPort()
 {
-    return 443;
+    return port_;
 }
 
 bool ApiSession::IsSSLRequired()
 {
-    return GetPort() == 443 || GetPort() == 8443;
+    return IsTunnelRequired();
 }
 
 bool ApiSession::IsTunnelRequired()
 {
-    return IsSSLRequired();
+    return use_tunnel_;
 }
 
 Pricing& ApiSession::pricing()

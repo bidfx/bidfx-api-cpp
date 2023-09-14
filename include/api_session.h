@@ -32,6 +32,8 @@ class ApiSession : public Session
 {
 private:
     std::string host_;
+    int port_;
+    bool use_tunnel_;
     std::string username_;
     std::string password_;
     std::string default_account_;
@@ -46,6 +48,8 @@ public:
     ~ApiSession();
 
     Session& SetHost(std::string host) override;
+    Session& SetPort(int port) override;
+    Session& SetUseTunnel(bool use_tunnel) override;
     Session& SetUsername(std::string username) override;
     Session& SetPassword(std::string password) override;
     Session& SetDefaultAccount(std::string buy_side_account) override;
