@@ -32,8 +32,8 @@ BasicUserInfo::BasicUserInfo(std::string host, int port, bool use_tunnel, std::s
     product_serial_number_ = product_serial_number;
 }
 
-    BasicUserInfo::BasicUserInfo(std::string host, std::string username, std::string default_account, std::string application,
-                                 std::string application_version, std::string product_serial_number)
+BasicUserInfo::BasicUserInfo(std::string host, std::string username, std::string default_account, std::string application,
+                             std::string application_version, std::string product_serial_number)
     {
         host_ = host;
         port_ = 443;

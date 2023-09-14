@@ -38,7 +38,7 @@ public:
     BasicUserInfo(std::string host, std::string username, std::string default_account, std::string application,
                   std::string application_version, std::string product_serial_number);
 
-    BasicUserInfo(std::string host, int port, bool use_tunenl, std::string username, std::string default_account,
+    BasicUserInfo(std::string host, int port, bool use_tunnel, std::string username, std::string default_account,
                   std::string application, std::string application_version, std::string product_serial_number);
 
     std::string GetHost() override;
