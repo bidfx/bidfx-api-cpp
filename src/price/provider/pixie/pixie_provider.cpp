@@ -228,10 +228,12 @@ void PixieProvider::HandlePriceSync(PriceSync& price_sync)
         {
             std::stringstream ss;
             ss << "received PriceSync for edition " << edition << " but it's not in the SubjectSetRegister";
+            Log->error(ss.str());
             throw IllegalStateException(ss.str());
         }
         else
         {
+            Log->trace(price_sync);
             PriceSyncVisitor visitor(*this, *subject_set);
             price_sync.Visit(GetDataDictionary(), visitor);
         }
@@ -249,6 +251,7 @@ void PixieProvider::HandlePriceSync(PriceSync& price_sync)
 ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
 {
     size_t frame_length = Varint::ReadU32(in);
+    Log->trace("Frame length {}", frame_length);
 
     if (frame_length == 0)
     {
@@ -265,6 +268,7 @@ ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
     while (total_read < frame_length)
     {
         size_t got = in.ReadBytes(frame_buffer, frame_length - total_read);
+        Log->trace("Read {} bytes", got);
 
         if (got == -1)
         {
@@ -274,9 +278,9 @@ ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
         }
 
         total_read += got;
+        message_frame.WriteBytes(frame_buffer, got);
     }
 
-    message_frame.WriteBytes(frame_buffer, frame_length);
     delete[] frame_buffer;
 
     return std::move(message_frame);
