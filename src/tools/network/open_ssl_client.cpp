@@ -68,6 +68,7 @@ void OpenSSLClient::Start()
 
 void OpenSSLClient::Close()
 {
+    Log->trace("Closing SSL client");
     SSL_free(ssl_);
     close(server_);
 }

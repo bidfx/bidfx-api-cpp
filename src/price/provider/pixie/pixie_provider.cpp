@@ -101,6 +101,11 @@ void PixieProvider::InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl
     }
     catch (std::ios_base::failure& e)
     {
+        Log->warn("IOException in main loop {}", e.what());
+    }
+    catch (std::exception &e)
+    {
+        Log->error("Error in main loop {}", e.what());
     }
 
     OnConnectionError();
@@ -204,6 +209,7 @@ void PixieProvider::HandleNextMessage(InputStream& in)
         std::chrono::nanoseconds received_time_nanos = std::chrono::high_resolution_clock::now().time_since_epoch();
         std::chrono::milliseconds received_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
         PriceSync price_sync = price_sync_decoder_.DecodePriceSync(buffer);
+        Log->trace(price_sync);
         HandlePriceSync(price_sync);
         ack_queue_.Push(AckData(price_sync.GetRevision(), price_sync.GetRevisionTime(), received_time.count(), received_time_nanos.count()));
     }
@@ -233,7 +239,6 @@ void PixieProvider::HandlePriceSync(PriceSync& price_sync)
         }
         else
         {
-            Log->trace(price_sync);
             PriceSyncVisitor visitor(*this, *subject_set);
             price_sync.Visit(GetDataDictionary(), visitor);
         }

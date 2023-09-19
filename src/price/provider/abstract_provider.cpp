@@ -79,7 +79,7 @@ void AbstractProvider::CreateConnection()
     }
     catch(std::exception &e)
     {
-
+        Log->error("Create connection had error {}", e.what());
     }
 }
 
