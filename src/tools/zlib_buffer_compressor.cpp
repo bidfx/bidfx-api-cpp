@@ -2,6 +2,7 @@
  * Copyright 2018 2019 BidFX Systems Ltd. All rights reserved.
  */
 
+#include <limits>
 #include <sstream>
 #include "assert.h"
 #include "include/exceptions/compressor_exception.h"

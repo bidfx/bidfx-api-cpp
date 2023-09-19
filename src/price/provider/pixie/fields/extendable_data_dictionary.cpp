@@ -13,6 +13,7 @@
     limitations under the License.
  */
 
+#include <stdexcept>
 #include <string>
 #include <algorithm>
 #include "extendable_data_dictionary.h"
