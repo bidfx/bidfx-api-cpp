@@ -97,9 +97,17 @@ void PricingSession::OnPriceUpdate(const Subject& subject, const std::map<std::s
     subscription.MergePriceMap(price_update, replace_all_fields);
 
     std::shared_ptr<PriceUpdateEvent> event = std::make_shared<PriceUpdateEvent>(subject, subscription.GetAllPriceFields(), price_update);
-    for (auto callback : price_update_callback_)
+    try
     {
-        callback(event);
+        for (auto callback : price_update_callback_)
+        {
+            callback(event);
+        }
+    }
+    catch (std::exception &e)
+    {
+        Log->warn("error handling price update {}", e.what());
+        throw e;
     }
 }
 
@@ -114,9 +122,17 @@ void PricingSession::OnProviderStatusUpdate(std::shared_ptr<ProviderStatusEvent>
         ResubscribeToAllOn(pixie_provider_);
     }
 
-    for (auto callback : provider_status_update_callback_)
+    try
     {
-        callback(event);
+        for (auto callback : provider_status_update_callback_)
+        {
+            callback(event);
+        }
+    }
+    catch (std::exception &e)
+    {
+        Log->warn("error handling provider status {}", e.what());
+        throw e;
     }
 }
 
@@ -134,15 +150,23 @@ void PricingSession::OnSubscriptionStatus(const Subject& subject, SubscriptionSt
     }
 
     std::shared_ptr<SubscriptionStatusEvent> event = std::make_shared<SubscriptionStatusEvent>(subject, status, reason);
-    for (auto callback : subscription_status_callback_)
+    try
     {
-        callback(event);
+        for (auto callback : subscription_status_callback_)
+        {
+            callback(event);
+        }
+    }
+    catch (std::exception &e)
+    {
+        Log->warn("error handling price status {}", e.what());
+        throw e;
     }
 }
 
 void PricingSession::ResubscribeToAllOn(Provider* provider)
 {
-    Log->info("Refreshing all subscribed subjects");
+    Log->info("refreshing all subscribed subjects");
 
     for (auto subject_subscription : subscriptions_)
     {
@@ -181,7 +205,7 @@ void PricingSession::Stop()
     {
         return;
     }
-    Log->info("Stopping");
+    Log->info("stopping");
     subscriptions_.clear();
     pixie_provider_->Stop();
     return;

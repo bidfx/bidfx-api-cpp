@@ -101,6 +101,11 @@ void PixieProvider::InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl
     }
     catch (std::ios_base::failure& e)
     {
+        Log->warn("IOException in main loop {}", e.what());
+    }
+    catch (std::exception &e)
+    {
+        Log->error("error in main loop {}", e.what());
     }
 
     OnConnectionError();
@@ -204,16 +209,17 @@ void PixieProvider::HandleNextMessage(InputStream& in)
         std::chrono::nanoseconds received_time_nanos = std::chrono::high_resolution_clock::now().time_since_epoch();
         std::chrono::milliseconds received_time = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now().time_since_epoch());
         PriceSync price_sync = price_sync_decoder_.DecodePriceSync(buffer);
+        Log->trace(price_sync);
         HandlePriceSync(price_sync);
         ack_queue_.Push(AckData(price_sync.GetRevision(), price_sync.GetRevisionTime(), received_time.count(), received_time_nanos.count()));
     }
     else if (msg_type ==  PixieMessageType::HEARTBEAT)
     {
-        Log->debug("Received a heartbeat message from the server");
+        Log->debug("received a heartbeat message from the server");
     }
     else
     {
-        Log->debug("Received message of type: {}", msg_type);
+        Log->debug("received message of type: {}", msg_type);
     }
 }
 
@@ -228,6 +234,7 @@ void PixieProvider::HandlePriceSync(PriceSync& price_sync)
         {
             std::stringstream ss;
             ss << "received PriceSync for edition " << edition << " but it's not in the SubjectSetRegister";
+            Log->error(ss.str());
             throw IllegalStateException(ss.str());
         }
         else
@@ -249,6 +256,7 @@ void PixieProvider::HandlePriceSync(PriceSync& price_sync)
 ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
 {
     size_t frame_length = Varint::ReadU32(in);
+    Log->trace("frame length {}", frame_length);
 
     if (frame_length == 0)
     {
@@ -265,6 +273,7 @@ ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
     while (total_read < frame_length)
     {
         size_t got = in.ReadBytes(frame_buffer, frame_length - total_read);
+        Log->trace("read {} bytes", got);
 
         if (got == -1)
         {
@@ -274,9 +283,9 @@ ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
         }
 
         total_read += got;
+        message_frame.WriteBytes(frame_buffer, got);
     }
 
-    message_frame.WriteBytes(frame_buffer, frame_length);
     delete[] frame_buffer;
 
     return std::move(message_frame);

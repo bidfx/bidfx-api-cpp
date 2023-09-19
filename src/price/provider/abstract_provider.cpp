@@ -63,7 +63,7 @@ void AbstractProvider::ContinuouslyConnectLoop()
         CreateConnection();
         if (IsRunning())
         {
-            Log->info("Will reconnect in 10 seconds");
+            Log->info("will reconnect in 10 seconds");
             std::this_thread::sleep_for(std::chrono::seconds(10));
         }
     }
@@ -79,7 +79,7 @@ void AbstractProvider::CreateConnection()
     }
     catch(std::exception &e)
     {
-
+        Log->error("create connection had error {}", e.what());
     }
 }
 
