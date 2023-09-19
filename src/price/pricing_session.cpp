@@ -106,7 +106,7 @@ void PricingSession::OnPriceUpdate(const Subject& subject, const std::map<std::s
     }
     catch (std::exception &e)
     {
-        Log->warn("Error handling price update {}", e.what());
+        Log->warn("error handling price update {}", e.what());
         throw e;
     }
 }
@@ -131,7 +131,7 @@ void PricingSession::OnProviderStatusUpdate(std::shared_ptr<ProviderStatusEvent>
     }
     catch (std::exception &e)
     {
-        Log->warn("Error handling provider status {}", e.what());
+        Log->warn("error handling provider status {}", e.what());
         throw e;
     }
 }
@@ -159,14 +159,14 @@ void PricingSession::OnSubscriptionStatus(const Subject& subject, SubscriptionSt
     }
     catch (std::exception &e)
     {
-        Log->warn("Error handling price status {}", e.what());
+        Log->warn("error handling price status {}", e.what());
         throw e;
     }
 }
 
 void PricingSession::ResubscribeToAllOn(Provider* provider)
 {
-    Log->info("Refreshing all subscribed subjects");
+    Log->info("refreshing all subscribed subjects");
 
     for (auto subject_subscription : subscriptions_)
     {
@@ -205,7 +205,7 @@ void PricingSession::Stop()
     {
         return;
     }
-    Log->info("Stopping");
+    Log->info("stopping");
     subscriptions_.clear();
     pixie_provider_->Stop();
     return;

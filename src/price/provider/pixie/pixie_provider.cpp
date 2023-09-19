@@ -105,7 +105,7 @@ void PixieProvider::InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl
     }
     catch (std::exception &e)
     {
-        Log->error("Error in main loop {}", e.what());
+        Log->error("error in main loop {}", e.what());
     }
 
     OnConnectionError();
@@ -215,11 +215,11 @@ void PixieProvider::HandleNextMessage(InputStream& in)
     }
     else if (msg_type ==  PixieMessageType::HEARTBEAT)
     {
-        Log->debug("Received a heartbeat message from the server");
+        Log->debug("received a heartbeat message from the server");
     }
     else
     {
-        Log->debug("Received message of type: {}", msg_type);
+        Log->debug("received message of type: {}", msg_type);
     }
 }
 
@@ -256,7 +256,7 @@ void PixieProvider::HandlePriceSync(PriceSync& price_sync)
 ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
 {
     size_t frame_length = Varint::ReadU32(in);
-    Log->trace("Frame length {}", frame_length);
+    Log->trace("frame length {}", frame_length);
 
     if (frame_length == 0)
     {
@@ -273,7 +273,7 @@ ByteBuffer PixieProvider::ReadMessageFrame(InputStream& in)
     while (total_read < frame_length)
     {
         size_t got = in.ReadBytes(frame_buffer, frame_length - total_read);
-        Log->trace("Read {} bytes", got);
+        Log->trace("read {} bytes", got);
 
         if (got == -1)
         {
