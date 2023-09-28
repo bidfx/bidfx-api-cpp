@@ -85,11 +85,6 @@ int BasicUserInfo::GetPort()
     return port_;
 }
 
-bool BasicUserInfo::IsSSLRequired()
-{
-    return IsTunnelRequired();
-}
-
 bool BasicUserInfo::IsTunnelRequired()
 {
     return use_tunnel_;

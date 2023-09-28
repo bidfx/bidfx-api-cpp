@@ -52,7 +52,7 @@ add_library(
         include/tools/base64.h
         src/price/provider/pixie/pixie_protocol_options.h
         src/price/provider/pixie/pixie_protocol_options.cpp
-        src/tools/network/ssl_client.h
+        src/tools/network/client.h
         include/session.h
         include/price_update_event.h
         include/subscriber.h
@@ -189,7 +189,7 @@ add_library(
         include/exceptions/illegal_state_exception.h
         src/exceptions/illegal_state_exception.cpp
         src/tools/optional.h
-        src/price/provider/protocol_options.h src/tools/network/open_ssl_client.cpp)
+        src/price/provider/protocol_options.h src/tools/network/open_ssl_client.cpp src/tools/network/direct_client.h src/tools/network/direct_client.cpp)
 
 # Concurrency
 #add_subdirectory(lib/junction-master)

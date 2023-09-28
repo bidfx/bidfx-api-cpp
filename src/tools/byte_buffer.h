@@ -19,7 +19,7 @@
 #include <cstdint>
 #include <stddef.h>
 #include <string>
-#include "src/tools/network/ssl_client.h"
+#include "src/tools/network/client.h"
 
 #define DEFAULT_MAX_CAPACITY 8192
 

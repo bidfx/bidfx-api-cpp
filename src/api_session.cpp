@@ -32,7 +32,6 @@ ApiSession::~ApiSession()
 {
     delete(pricing_);
 }
-
 Session& ApiSession::SetHost(std::string host)
 {
     host_ = host;
@@ -124,11 +123,6 @@ std::string ApiSession::GetProductSerialNumber()
 int ApiSession::GetPort()
 {
     return port_;
-}
-
-bool ApiSession::IsSSLRequired()
-{
-    return IsTunnelRequired();
 }
 
 bool ApiSession::IsTunnelRequired()

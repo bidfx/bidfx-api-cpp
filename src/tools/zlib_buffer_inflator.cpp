@@ -13,6 +13,7 @@
     limitations under the License.
  */
 
+#include <limits>
 #include <sstream>
 #include "assert.h"
 #include "include/exceptions/compressor_exception.h"

@@ -33,7 +33,7 @@ namespace bidfx_public_api::price::provider
 {
 
 using bidfx_public_api::tools::TunnelConnector;
-using bidfx_public_api::tools::SSLClient;
+using bidfx_public_api::tools::Client;
 using bidfx_public_api::tools::CountdownLatch;
 using bidfx_public_api::price::pixie::RunState;
 using bidfx_public_api::price::PriceField;
@@ -48,7 +48,7 @@ private:
 
     UserInfo* user_info_;
     TunnelConnector tunnel_connector_;
-    std::shared_ptr<SSLClient> ssl_client_;
+    std::shared_ptr<Client> client_;
 
     std::atomic<RunState> run_state_ = RunState::INITIAL;
     CountdownLatch latch;
@@ -70,11 +70,11 @@ protected:
 
     void PublishSubscriptionStatus(const Subject& subject, SubscriptionStatus status, std::string& explanation);
 
-    void Start(std::function<void()> runnable);
+    void Start(const std::function<void()>& runnable);
 
     void SetProviderStatus(Status status, std::string text);
 
-    virtual void InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl_client_) = 0;
+    virtual void InitiatePriceServerConnection(std::shared_ptr<Client> ssl_client_) = 0;
 
     bool IsRunning();
 

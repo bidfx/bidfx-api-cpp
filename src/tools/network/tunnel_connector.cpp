@@ -22,8 +22,9 @@
 #include "include/tools/logger_factory.h"
 #include "tunnel_connector.h"
 #include "open_ssl_client.h"
+#include "direct_client.h"
 
-namespace  bidfx_public_api::tools
+namespace bidfx_public_api::tools
 {
 
 using bidfx_public_api::tools::LoggerFactory;
@@ -38,32 +39,36 @@ TunnelConnector::TunnelConnector(UserInfo& user_info, std::string service) : use
     }
 }
 
-std::shared_ptr<SSLClient> TunnelConnector::Connect(std::chrono::milliseconds read_timeout)
+std::shared_ptr<Client> TunnelConnector::Connect(std::chrono::milliseconds read_timeout)
 {
     try
     {
         Log->info("Connecting to {}:{} with read timeout {}ms", user_info_.GetHost(), user_info_.GetPort(), read_timeout.count());
-        std::shared_ptr<SSLClient> ssl_client = std::make_shared<OpenSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
-        ssl_client->Start();
+        std::shared_ptr<Client> client = nullptr;
 
         if (user_info_.IsTunnelRequired())
         {
-            TunnelThroughToServer(*ssl_client);
+            client = std::make_shared<OpenSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
+            TunnelThroughToServer(*client);
+        }
+        else
+        {
+            client = std::make_shared<DirectClient>(user_info_.GetHost(), user_info_.GetPort());
         }
 
-        return std::move(ssl_client);
+        return std::move(client);
     }
     catch (std::ios_base::failure &e)
     {
-        Log->warn("exception during handshake (SSL Client): {}", e.what());
+        Log->warn("exception during handshake: {}", e.what());
         throw std::ios_base::failure(e);
     }
 }
 
-void TunnelConnector::TunnelThroughToServer(SSLClient& ssl_client)
+void TunnelConnector::TunnelThroughToServer(Client& client)
 {
-    WriteTunnelRequest(ssl_client.GetOutputStream());
-    ReadTunnelResponse(ssl_client.GetInputStream());
+    WriteTunnelRequest(client.GetOutputStream());
+    ReadTunnelResponse(client.GetInputStream());
 }
 
 void TunnelConnector::WriteTunnelRequest(OutputStream& stream)

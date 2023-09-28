@@ -13,7 +13,6 @@
     limitations under the License.
  */
 
-#include <cstdio>
 #include <unistd.h>
 #include <malloc.h>
 #include <cstring>
@@ -29,7 +28,7 @@
 
 #define FAIL    -1
 
-namespace  bidfx_public_api::tools
+namespace bidfx_public_api::tools
 {
 using bidfx_public_api::tools::LoggerFactory;
 std::shared_ptr<spdlog::logger> OpenSSLClient::Log = nullptr;
@@ -81,30 +80,6 @@ OutputStream& OpenSSLClient::GetOutputStream()
 InputStream& OpenSSLClient::GetInputStream()
 {
     return input_stream_;
-}
-
-int OpenSSLClient::OpenConnection(const std::string& hostname, int port)
-{
-    int sd;
-    struct hostent *host;
-    struct sockaddr_in addr;
-
-    if ( (host = gethostbyname(hostname.c_str())) == NULL )
-    {
-        throw std::ios_base::failure("Could not determine host from: " + hostname);
-    }
-    sd = socket(PF_INET, SOCK_STREAM, 0);
-    bzero(&addr, sizeof(addr));
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(port);
-    addr.sin_addr.s_addr = *(long*)(host->h_addr);
-    int connect_result = connect(sd, (struct sockaddr*)&addr, sizeof(addr));
-    if ( connect_result != 0 )
-    {
-        close(sd);
-        throw std::ios_base::failure("Could not connect to " + hostname + ":" + std::to_string(port) + " - error code " + std::to_string(connect_result));
-    }
-    return sd;
 }
 
 SSL_CTX* OpenSSLClient::InitCTX()

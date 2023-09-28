@@ -1,4 +1,4 @@
-/**  Copyright 2020 BidFX
+/**  Copyright 2023 BidFX
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
@@ -13,30 +13,29 @@
     limitations under the License.
  */
 
-#ifndef PUBLIC_API_CPP_TOOLS_OPEN_SSL_CLIENT_H_
-#define PUBLIC_API_CPP_TOOLS_OPEN_SSL_CLIENT_H_
+#ifndef BIDFX_PUBLIC_API_CPP_DIRECT_CLIENT_H
+#define BIDFX_PUBLIC_API_CPP_DIRECT_CLIENT_H
 
 #include <chrono>
-#include <openssl/ssl.h>
 #include "lib/logging/spdlog/logger.h"
 #include "client.h"
 
 namespace bidfx_public_api::tools
 {
 
-class OpenSSLClient : public Client {
+class DirectClient : public Client {
 private:
     static std::shared_ptr<spdlog::logger> Log;
 
     class OutputStreamImpl : public OutputStream
     {
     private:
-        OpenSSLClient* open_ssl_client_;
+        DirectClient* direct_client_;
 
     public:
-        explicit OutputStreamImpl(OpenSSLClient& open_ssl_client);
+        explicit OutputStreamImpl(DirectClient& direct_client);
 
-        size_t WriteByte(const unsigned char c) override;
+        size_t WriteByte(unsigned char c) override;
         size_t WriteBytes(const unsigned char* c, size_t len) override;
         size_t WriteString(const std::string&) override;
     };
@@ -44,32 +43,25 @@ private:
     class InputStreamImpl : public InputStream
     {
     private:
-        OpenSSLClient* open_ssl_client_;
+        DirectClient* direct_client_;
 
     public:
-        explicit InputStreamImpl(OpenSSLClient& open_ssl_client);
+        explicit InputStreamImpl(DirectClient& direct_client);
 
         unsigned char ReadByte() override;
         size_t ReadBytes(unsigned char* buf, size_t len) override;
     };
 
-    SSL_CTX *ctx_;
-    int server_;
-    SSL *ssl_;
     std::string host_;
     int port_;
-    std::chrono::milliseconds read_timeout_;
+    int server_;
 
     OutputStreamImpl output_stream_;
     InputStreamImpl input_stream_;
-
-    SSL_CTX* InitCTX();
-    void ShowCerts(SSL* ssl);
-    std::string OpenSSLErrAsString();
 public:
-    OpenSSLClient(std::string host, int port, std::chrono::milliseconds read_timeout);
+    DirectClient(std::string host, int port);
 
-    ~OpenSSLClient() override = default;
+    ~DirectClient() override = default;
 
     void Start() override;
 
@@ -83,4 +75,4 @@ public:
 
 }
 
-#endif //PUBLIC_API_CPP_TOOLS_OPEN_SSL_CLIENT_H_
+#endif //BIDFX_PUBLIC_API_CPP_DIRECT_CLIENT_H

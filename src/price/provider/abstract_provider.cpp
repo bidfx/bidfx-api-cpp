@@ -20,10 +20,7 @@
 #include "include/subscription_status_event.h"
 #include "include/exceptions/timeout_exception.h"
 #include "include/tools/logger_factory.h"
-#include "src/price/subscription.h"
 #include "src/price/provider/abstract_provider.h"
-#include "abstract_provider.h"
-#include "include/subscription_status.h"
 #include "provider_status_event_impl.h"
 
 namespace bidfx_public_api::price::provider
@@ -35,7 +32,7 @@ using bidfx_public_api::tools::LoggerFactory;
 
 std::shared_ptr<spdlog::logger> AbstractProvider::Log = nullptr;
 
-AbstractProvider::AbstractProvider(UserInfo* user_info, std::string service) : tunnel_connector_(TunnelConnector(*user_info, service)), latch(CountdownLatch(1))
+AbstractProvider::AbstractProvider(UserInfo* user_info, std::string service) : tunnel_connector_(TunnelConnector(*user_info, std::move(service))), latch(CountdownLatch(1))
 {
     if (Log == nullptr)
     {
@@ -73,9 +70,9 @@ void AbstractProvider::CreateConnection()
 {
     try
     {
-        ssl_client_ = tunnel_connector_.Connect(GetProtocolOptions().GetHeartbeatInterval() * 2);
-        InitiatePriceServerConnection(ssl_client_);
-        ssl_client_->Close();
+        client_ = tunnel_connector_.Connect(GetProtocolOptions().GetHeartbeatInterval() * 2);
+        InitiatePriceServerConnection(client_);
+        client_->Close();
     }
     catch(std::exception &e)
     {
@@ -83,7 +80,7 @@ void AbstractProvider::CreateConnection()
     }
 }
 
-void AbstractProvider::Start(std::function<void()> runnable)
+void AbstractProvider::Start(const std::function<void()>& runnable)
 {
     RunState initial = RunState::INITIAL;
     if (run_state_.compare_exchange_strong(initial, RunState::RUNNING))
@@ -104,7 +101,7 @@ void AbstractProvider::Stop()
     if (run_state_.compare_exchange_strong(running, RunState::STOPPED))
     {
         Log->info("stopping price provider " +  name_);
-        ssl_client_->Close();
+        client_->Close();
         SetProviderStatus(Status::CLOSED, "closed by request");
     }
 }
@@ -131,7 +128,7 @@ void AbstractProvider::SetProviderStatus(Provider::Status status, std::string te
     {
         Status previous_status = provider_status_;
         provider_status_ = status;
-        provider_status_text_ = text;
+        provider_status_text_ = std::move(text);
 
         Log->info("price provider {} is {} {}", name_, provider_status_, provider_status_text_);
 
@@ -180,7 +177,7 @@ void AbstractProvider::SetSubscriptionStatusEventCallback(
 
 ProviderProperties AbstractProvider::GetProperties()
 {
-    return ProviderProperties(provider_status_, name_, provider_status_text_);
+    return {provider_status_, name_, provider_status_text_};
 }
 
 bool AbstractProvider::IsRunning()

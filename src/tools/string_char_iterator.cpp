@@ -17,7 +17,7 @@
 #include <ios>
 #include "string_char_iterator.h"
 
-namespace  bidfx_public_api::tools
+namespace bidfx_public_api::tools
 {
 
 StringCharIterator::StringCharIterator(std::string string, const char delimiter)

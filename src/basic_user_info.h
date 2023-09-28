@@ -49,7 +49,6 @@ public:
     std::string GetApplicationVersion() override;
     std::string GetProductSerialNumber() override;
     int GetPort() override;
-    bool IsSSLRequired() override;
     bool IsTunnelRequired() override;
 };
 
