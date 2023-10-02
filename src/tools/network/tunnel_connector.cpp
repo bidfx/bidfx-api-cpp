@@ -43,17 +43,20 @@ std::shared_ptr<Client> TunnelConnector::Connect(std::chrono::milliseconds read_
 {
     try
     {
-        Log->info("Connecting to {}:{} with read timeout {}ms", user_info_.GetHost(), user_info_.GetPort(), read_timeout.count());
         std::shared_ptr<Client> client = nullptr;
 
         if (user_info_.IsTunnelRequired())
         {
+            Log->info("Connecting using SSL to {}:{} with read timeout {}ms", user_info_.GetHost(), user_info_.GetPort(), read_timeout.count());
             client = std::make_shared<OpenSSLClient>(user_info_.GetHost(), user_info_.GetPort(), read_timeout);
+            client->Start();
             TunnelThroughToServer(*client);
         }
         else
         {
+            Log->info("Connecting to {}:{}", user_info_.GetHost(), user_info_.GetPort());
             client = std::make_shared<DirectClient>(user_info_.GetHost(), user_info_.GetPort());
+            client->Start();
         }
 
         return std::move(client);
