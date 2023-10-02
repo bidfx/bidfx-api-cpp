@@ -13,11 +13,12 @@
     limitations under the License.
  */
 
+#include <stdexcept>
 #include <string>
 #include <algorithm>
+#include <stdexcept>
 #include "extendable_data_dictionary.h"
 #include "data_dictionary_utils.h"
-#include "src/tools/optional.h"
 
 namespace bidfx_public_api::price::pixie
 {

@@ -67,8 +67,6 @@ public:
      */
     virtual int GetPort() = 0;
 
-    virtual bool IsSSLRequired() = 0;
-
     virtual bool IsTunnelRequired() = 0;
 };
 

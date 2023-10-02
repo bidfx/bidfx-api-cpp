@@ -18,7 +18,7 @@
 #include "guid.h"
 #include "hex_encoder.h"
 
-namespace  bidfx_public_api::tools
+namespace bidfx_public_api::tools
 {
 
 GUID::GUID()

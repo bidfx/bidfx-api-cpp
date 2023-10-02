@@ -67,7 +67,6 @@ public:
     std::string GetApplicationVersion() override;
     std::string GetProductSerialNumber() override;
 
-    bool IsSSLRequired() override;
     bool IsTunnelRequired() override;
 
     int GetPort() override;

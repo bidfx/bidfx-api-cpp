@@ -25,7 +25,7 @@ namespace bidfx_public_api::tools
 class OutputStream
 {
 public:
-    virtual size_t WriteByte(const unsigned char c) = 0;
+    virtual size_t WriteByte(unsigned char c) = 0;
     virtual size_t WriteBytes(const unsigned char* c, size_t len) = 0;
     virtual size_t WriteString(const std::string& string) = 0;
 };

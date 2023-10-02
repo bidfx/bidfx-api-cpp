@@ -17,7 +17,7 @@
 #define PUBLIC_API_CPP_TOOLS_TUNNEL_CONNECTOR_H_
 
 #include "include/user_info.h"
-#include "ssl_client.h"
+#include "client.h"
 #include "src/tools/byte_buffer.h"
 #include "output_stream.h"
 #include "input_stream.h"
@@ -39,14 +39,14 @@ private:
     UserInfo& user_info_;
     std::string service_;
 
-    void TunnelThroughToServer(SSLClient& ssl_client);
+    void TunnelThroughToServer(Client& client);
     void WriteTunnelRequest(OutputStream& stream);
     void ReadTunnelResponse(InputStream& stream);
     std::string ReadLine(InputStream& stream);
 
 public:
     TunnelConnector(UserInfo& user_info, std::string service);
-    std::shared_ptr<SSLClient> Connect(std::chrono::milliseconds read_timeout);
+    std::shared_ptr<Client> Connect(std::chrono::milliseconds read_timeout);
 };
 
 

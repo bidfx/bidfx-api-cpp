@@ -48,7 +48,7 @@ using bidfx_public_api::price::provider::AbstractProvider;
 using bidfx_public_api::price::provider::ProviderConsumer;
 using bidfx_public_api::price::provider::ProviderProperties;
 using bidfx_public_api::price::pixie::DataDictionaryMessage;
-using bidfx_public_api::tools::SSLClient;
+using bidfx_public_api::tools::Client;
 using bidfx_public_api::tools::InputStream;
 using bidfx_public_api::tools::OutputStream;
 using bidfx_public_api::tools::ByteBuffer;
@@ -79,18 +79,18 @@ private:
 
     std::atomic<bool> disconnection_triggered_ = std::atomic<bool>(false);
 
-    void Login(InputStream& in, OutputStream& out, const PixieProtocolOptions& options, SSLClient& ssl_client);
+    void Login(InputStream& in, OutputStream& out, const PixieProtocolOptions& options);
     void WriteProtocolSignature(OutputStream& out, std::string url);
     WelcomeMessage ReadWelcomeMessage(InputStream& in);
     GrantMessage ReadGrantMessage(InputStream& in);
     ByteBuffer ReadMessageFrame(InputStream& in);
     void CheckType(ByteBuffer& message_frame, const unsigned char& expected_type);
-    void MainLoop(std::shared_ptr<SSLClient> ssl_client);
+    void MainLoop(const std::shared_ptr<Client>& client);
     void HandleNextMessage(InputStream& in);
     void HandlePriceSync(PriceSync& price_sync);
     void OnDataDictionary(DataDictionaryMessage& dict_message);
-    void StartWriter(std::shared_ptr<SSLClient> ssl_client);
-    void HandleAcksAndSendSubscriptionSyncsAndHeartbeats(std::shared_ptr<SSLClient> ssl_client, int thread_num);
+    void StartWriter(std::shared_ptr<Client> client);
+    void HandleAcksAndSendSubscriptionSyncsAndHeartbeats(std::shared_ptr<Client> client, int thread_num);
     std::unique_ptr<AckData> PollNextAck();
     void PeriodicallyCheckSubscriptions(OutputStream& out);
     void CheckAndSendSubscriptions(OutputStream& out);
@@ -98,7 +98,7 @@ private:
     void OnConnectionError();
 
 protected:
-    void InitiatePriceServerConnection(std::shared_ptr<SSLClient> ssl_client) override;
+    void InitiatePriceServerConnection(std::shared_ptr<Client> client) override;
 
 public:
     explicit PixieProvider(UserInfo *user_info);

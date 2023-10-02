@@ -24,7 +24,7 @@
 #include <map>
 #include "spdlog/fmt/ostr.h"
 
-namespace  bidfx_public_api
+namespace bidfx_public_api
 {
 class ProviderStatusEvent;
 }
