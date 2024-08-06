@@ -8,6 +8,7 @@
 #include <cstdio>
 #include <unistd.h>
 #include <netdb.h>
+#include <string.h>
 #include <fstream>
 #include "output_stream.h"
 #include "input_stream.h"
