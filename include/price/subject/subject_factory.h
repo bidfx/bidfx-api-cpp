@@ -374,6 +374,7 @@ public:
 
                 /**
                  * Sets the quote request ID.
+                 * Should be set to the same unique value for quote requests that are part of the same overall RFQ.
                  * @param quote_request_id the quote request ID.
                  * @return the ongoing method chaining.
                  */
