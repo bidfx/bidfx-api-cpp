@@ -131,7 +131,7 @@ SubjectFactory::FX::FXQuoteRequest::FXQuoteRequest(SubjectFactory::FX& outer_cla
 {
 }
 
-SubjectFactory::FX::FXQuoteRequest& SubjectFactory::FX::FXQuoteRequest::QuoteSRequestId(const std::string& quotes_request_id)
+SubjectFactory::FX::FXQuoteRequest& SubjectFactory::FX::FXQuoteRequest::QuotesRequestId(const std::string& quotes_request_id)
 {
     outer_class_.subject_builder_.SetComponent(SubjectKey::QUOTES_REQUEST_ID, quotes_request_id);
     return *this;
