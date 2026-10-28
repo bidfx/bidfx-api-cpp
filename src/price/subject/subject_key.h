@@ -47,6 +47,7 @@ public:
     static const std::string ON_BEHALF_OF;
     static const std::string PUT_CALL;
     static const std::string QUANTITY;
+    static const std::string QUOTES_REQUEST_ID;
     static const std::string REQUEST_TYPE;
     static const std::string ROUTE;
     static const std::string ROWS;

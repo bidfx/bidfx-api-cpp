@@ -121,10 +121,20 @@ SubjectFactory::FX::FXDealable SubjectFactory::FX::Stream()
     return FXDealable(*this);
 }
 
-SubjectFactory::FX::FXDealable SubjectFactory::FX::Quote()
+SubjectFactory::FX::FXQuoteRequest SubjectFactory::FX::Quote()
 {
     ApplyBasicOTCFields(RequestType::QUOTE);
-    return FXDealable(*this);
+    return FXQuoteRequest(*this);
+}
+
+SubjectFactory::FX::FXQuoteRequest::FXQuoteRequest(SubjectFactory::FX& outer_class) : FXDealable(outer_class)
+{
+}
+
+SubjectFactory::FX::FXQuoteRequest& SubjectFactory::FX::FXQuoteRequest::QuoteSRequestId(const std::string& quotes_request_id)
+{
+    outer_class_.subject_builder_.SetComponent(SubjectKey::QUOTES_REQUEST_ID, quotes_request_id);
+    return *this;
 }
 
 
