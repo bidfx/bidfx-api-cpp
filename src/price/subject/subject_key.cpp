@@ -37,6 +37,7 @@ const std::string SubjectKey::LIQUIDITY_PROVIDER = "LiquidityProvider";
 const std::string SubjectKey::ON_BEHALF_OF = "OnBehalfOf";
 const std::string SubjectKey::PUT_CALL = "PutCall";
 const std::string SubjectKey::QUANTITY = "Quantity";
+const std::string SubjectKey::QUOTES_REQUEST_ID = "QuotesRequestId";
 const std::string SubjectKey::REQUEST_TYPE = "RequestFor";
 const std::string SubjectKey::ROUTE = "Route";
 const std::string SubjectKey::ROWS = "Rows";

@@ -81,6 +81,23 @@ TEST(SubjectFactoryTest, test_setting_fx_spot_quote)
                     .ToString().c_str());
 }
 
+TEST(SubjectFactoryTest, test_setting_fx_quote_with_request_id)
+{
+    SubjectFactory subject_factory = SubjectFactory(USER_INFO);
+
+    ASSERT_STREQ(
+            "AssetClass=Fx,BuySideAccount=FX_ACCT,Currency=EUR,DealType=Spot,Level=1,LiquidityProvider=CSFX,Quantity=1000000.00,QuotesRequestId=123456789,RequestFor=Quote,Symbol=EURGBP,Tenor=Spot,User=fbennett",
+            subject_factory.Fx().Quote()
+                    .QuotesRequestId("123456789")
+                    .Spot()
+                    .CurrencyPair("EURGBP")
+                    .Currency("EUR")
+                    .Quantity(1000000)
+                    .LiquidityProvider("CSFX")
+                    .CreateSubject()
+                    .ToString().c_str());
+}
+
 /*****************
  * Spot Tests - Error Handling
  *****************/

@@ -335,7 +335,7 @@ public:
         ////////////////////////////////////
         class FXDealable
         {
-        private:
+        protected:
             SubjectFactory::FX& outer_class_;
         public:
             explicit FXDealable(SubjectFactory::FX& outer_class);
@@ -367,6 +367,21 @@ public:
         };
 
         ////////////////////////////////////
+        class FXQuoteRequest : public FXDealable
+        {
+            public:
+                explicit FXQuoteRequest(SubjectFactory::FX& outer_class);
+
+                /**
+                 * Sets the quote request ID.
+                 * Should be set to the same unique value for quote requests that are part of the same overall RFQ.
+                 * @param quote_request_id the quote request ID.
+                 * @return the ongoing method chaining.
+                 */
+                FX::FXQuoteRequest& QuotesRequestId(const std::string& quote_request_id);
+        };
+
+        ////////////////////////////////////
         class FXBook
         {
         private:
@@ -389,7 +404,7 @@ public:
         /**
          * Gets a helper to create a request for quote (RFQ) subject.
          */
-        FXDealable Quote();
+        FXQuoteRequest Quote();
 
         /**
          * Gets a helper to create a FX top-of-book subject.
